@@ -1,0 +1,116 @@
+﻿
+/* ACCOUNT LAYOUT */
+.account-page {
+    width: 100%;
+    padding: 28px 24px;
+    background-color: #f7f8fc;
+    min-height: 500px;
+}
+
+.account-container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+/* SIDEBAR */
+.account-sidebar {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.account-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 18px;
+    background-color: #DCE1F4;
+    color: #263568;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+    .account-sidebar-title i {
+        font-size: 22px;
+    }
+
+.account-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+    .account-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 12px;
+        border-radius: 6px;
+        color: #374151;
+        font-size: 14px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        .account-nav a:hover {
+            background-color: #f1f3fa;
+            color: #263568;
+        }
+
+        .account-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+/* MAIN CONTENT */
+.account-content {
+    min-width: 0;
+    min-height: 400px;
+    width: 100%;
+    padding: 28px 32px;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+/* TABLET */
+@media (max-width: 768px) {
+    .account-page {
+        padding: 20px 12px;
+    }
+
+    .account-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .account-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+        .account-nav a {
+            flex: 1 1 150px;
+        }
+
+    .account-content {
+        padding: 20px;
+    }
+}
+
+
+/* MOBILE */
+@media (max-width: 480px) {
+    .account-content {
+        padding: 16px;
+    }
+
+    .account-nav a {
+        flex-basis: 100%;
+    }
+}

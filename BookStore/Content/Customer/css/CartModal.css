@@ -1,0 +1,261 @@
+﻿
+/* Lớp phủ nền */
+.cart-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(31, 41, 55, 0.55);
+}
+
+    .cart-modal.is-open {
+        display: flex;
+    }
+
+/* Hộp modal */
+.cart-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    padding: 28px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    animation: cartModalAppear 0.2s ease;
+}
+
+    .cart-modal-content h2 {
+        margin: 0 30px 20px 0;
+        color: #454e83;
+        font-size: 22px;
+    }
+
+.cart-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #6b7280;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+    .cart-modal-close:hover {
+        background: #f3f4f6;
+    }
+
+.cart-modal-book-title {
+    margin-bottom: 8px;
+    color: #1f2937;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.cart-modal-price {
+    margin-bottom: 20px;
+    color: #454e83;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.cart-modal-quantity-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cart-modal-quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+    .cart-modal-quantity button {
+        width: 38px;
+        height: 38px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #454e83;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+        .cart-modal-quantity button:hover {
+            background: #DCE1F4;
+        }
+
+    .cart-modal-quantity input {
+        width: 75px;
+        height: 38px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+.cart-modal-subtotal {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+    .cart-modal-subtotal strong {
+        color: #454e83;
+        text-align: right;
+    }
+
+.cart-modal-submit {
+    width: 100%;
+    min-height: 44px;
+    border: none;
+    border-radius: 8px;
+    background: #454e83;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .cart-modal-submit:hover {
+        background: #363e6b;
+    }
+
+    .cart-modal-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+/* Ảnh bìa và thông tin sách */
+.cart-modal-book {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.cart-modal-book-image {
+    flex: 0 0 110px;
+    width: 110px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f3f4f6;
+}
+
+    .cart-modal-book-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+.cart-modal-book-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.cart-modal-book-title {
+    margin: 0 0 12px;
+    color: #1f2937;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.cart-modal-book-details .cart-modal-price {
+    margin: 0 0 12px;
+    color: #454e83;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.cart-modal-book-details .cart-modal-stock {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Thông báo */
+.cart-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 11000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: calc(100% - 32px);
+    padding: 14px 20px;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #1f2937;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
+    border-left: 4px solid #16a34a;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+    .cart-toast.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .cart-toast i {
+        color: #16a34a;
+        font-size: 20px;
+    }
+
+    .cart-toast.is-error {
+        border-left-color: #dc2626;
+    }
+
+        .cart-toast.is-error i {
+            color: #dc2626;
+        }
+
+.header-cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 50px;
+    background: #454e83;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+@keyframes cartModalAppear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,141 @@
+﻿
+@model IEnumerable<BookStore.Models.Book>
+
+@{
+    ViewBag.Title = "Quản lý sách";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/BooksIndex.css")" />
+}
+
+<div class="books-page">
+    <div class="books-page-header">
+        <div>
+            <h2>Quản lý sách</h2>
+            <p>Quản lý thông tin và số lượng sách trong cửa hàng.</p>
+        </div>
+
+        <a href="@Url.Action("Create", "Books", new { area = "Admin" })"
+           class="btn-add-book">
+            <i class="fa-solid fa-plus"></i>
+            Thêm sách
+        </a>
+    </div>
+
+    <div class="books-table-wrapper">
+        <table class="books-table">
+            <thead>
+                <tr>
+                    <th>Mã sách</th>
+                    <th>Thông tin sách</th>
+                    <th>Thể loại</th>
+                    <th>Giá bán</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th class="column-actions">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="book-id">@item.BookID</td>
+
+                            <td>
+                                <div class="book-info">
+                                    @if (!String.IsNullOrWhiteSpace(item.ImageURL))
+                                    {
+                                        <img src="@Url.Content(item.ImageURL)"
+                                             alt="@item.Title"
+                                             class="book-thumbnail" />
+                                    }
+                                    else
+                                    {
+                                        <div class="book-thumbnail-placeholder">
+                                            <i class="fa-solid fa-book"></i>
+                                        </div>
+                                    }
+
+                                    <div class="book-info-text">
+                                        <div class="book-title">@item.Title</div>
+                                        <div class="book-author">
+                                            @(String.IsNullOrWhiteSpace(item.AuthorName)
+                                                ? "Chưa có tác giả"
+                                                : item.AuthorName)
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                @(item.Category != null
+                                    ? item.Category.CategoryName
+                                    : "Chưa phân loại")
+                            </td>
+
+                            <td class="book-price">
+                                @item.Price.ToString("N0") đ
+                            </td>
+
+                            <td>@item.StockQuantity</td>
+
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="book-status status-active">
+                                        Đang kinh doanh
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="book-status status-inactive">
+                                        Ngừng kinh doanh
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="book-actions">
+                                    <a href="@Url.Action("Edit", "Books", new { area = "Admin", id = item.BookID })"
+                                       class="btn-action btn-edit"
+                                       title="Sửa thông tin"
+                                       aria-label="Sửa thông tin sách">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+
+                                    <a href="@Url.Action("Details", "Books", new { area = "Admin", id = item.BookID })"
+                                       class="btn-action btn-details"
+                                       title="Xem chi tiết"
+                                       aria-label="Xem chi tiết sách">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+
+                                    <a href="@Url.Action("Delete", "Books", new { area = "Admin", id = item.BookID })"
+                                       class="btn-action btn-delete"
+                                       title="Xóa sách"
+                                       aria-label="Xóa sách">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="books-empty">
+                            <i class="fa-solid fa-book-open"></i>
+                            <p>Chưa có sách nào trong hệ thống.</p>
+                            <span>Hãy nhấn "Thêm sách" để tạo sách đầu tiên.</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

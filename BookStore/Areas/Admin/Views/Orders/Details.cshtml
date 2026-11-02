@@ -1,0 +1,151 @@
+﻿
+@model BookStore.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Admin/css/OrderDetails.css")" />
+}
+
+<div class="order-details-page">
+    <div class="page-heading">
+        <div>
+            <h2>Chi tiết đơn hàng</h2>
+            <p>Thông tin chi tiết của đơn hàng trong hệ thống.</p>
+        </div>
+    </div>
+
+    <div class="order-details-card">
+        <div class="order-details-header">
+            <div>
+                <span class="order-details-label">Mã đơn hàng</span>
+                <h3>#@Model.OrderID</h3>
+            </div>
+
+            <span class="order-details-status">
+                @(string.IsNullOrEmpty(Model.Status)
+                    ? "Chưa cập nhật"
+                    : Model.Status)
+            </span>
+        </div>
+
+        <div class="order-details-section">
+            <h4>Thông tin đơn hàng</h4>
+
+            <div class="order-info-grid">
+                <div class="order-info-item">
+                    <span>Ngày đặt hàng</span>
+                    <strong>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Tổng tiền</span>
+                    <strong class="order-total">
+                        @Model.TotalAmount.ToString("N0") đ
+                    </strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Phương thức thanh toán</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.PaymentMethod)
+                            ? "Chưa cập nhật"
+                            : Model.PaymentMethod)
+                    </strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Trạng thái thanh toán</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.PaymentStatus)
+                            ? "Chưa cập nhật"
+                            : Model.PaymentStatus)
+                    </strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Thời điểm hoàn thành</span>
+                    <strong>
+                        @Html.DisplayFor(model => model.CompletedAt)
+                    </strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Hạn đổi trả</span>
+                    <strong>
+                        @Html.DisplayFor(model => model.ReturnDeadline)
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-details-section">
+            <h4>Thông tin người nhận</h4>
+
+            <div class="order-info-grid">
+                <div class="order-info-item">
+                    <span>Tên khách hàng</span>
+                    <strong>
+                        @(Model.User != null
+                            ? Model.User.Email
+                            : "Không xác định")
+                    </strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Người nhận</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.ReceiverName)
+                            ? "Chưa cập nhật"
+                            : Model.ReceiverName)
+                    </strong>
+                </div>
+
+                <div class="order-info-item">
+                    <span>Số điện thoại</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.ReceiverPhone)
+                            ? "Chưa cập nhật"
+                            : Model.ReceiverPhone)
+                    </strong>
+                </div>
+
+                <div class="order-info-item order-info-full">
+                    <span>Địa chỉ giao hàng</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.AddressDelivery)
+                            ? "Chưa cập nhật"
+                            : Model.AddressDelivery)
+                    </strong>
+                </div>
+
+                <div class="order-info-item order-info-full">
+                    <span>Ghi chú</span>
+                    <strong>
+                        @(string.IsNullOrEmpty(Model.Notes)
+                            ? "Không có ghi chú"
+                            : Model.Notes)
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-details-actions">
+            @Html.ActionLink(
+                "Quay lại danh sách",
+                "Index",
+                null,
+                new { @class = "btn-order-back" })
+
+            @Html.ActionLink(
+                "Cập nhật đơn hàng",
+                "Edit",
+                new { id = Model.OrderID },
+                new { @class = "btn-order-edit" })
+        </div>
+    </div>
+</div>

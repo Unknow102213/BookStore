@@ -1,0 +1,199 @@
+﻿
+@model BookStore.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_CustomerAccountLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/OrderDetails.css")" />
+}
+
+@{
+    var details = Model.OrderDetails.ToList();
+}
+
+
+<div class="order-details-page">
+
+    <div class="order-details-header">
+        <div>
+            <h2>Chi tiết đơn hàng</h2>
+            <p>Mã đơn hàng: <strong>#@Model.OrderID</strong></p>
+        </div>
+
+        <a href="@Url.Action("OrderHistory", "Order")"
+           class="back-order-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
+    <section class="order-info-section">
+        <h3>Thông tin đơn hàng</h3>
+
+        <div class="order-info-grid">
+            <div class="order-info-item">
+                <span>Ngày đặt hàng</span>
+                <strong>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</strong>
+            </div>
+
+            <div class="order-info-item">
+                <span>Trạng thái</span>
+                <strong class="order-status">@Model.Status</strong>
+            </div>
+
+            <div class="order-info-item">
+                <span>Phương thức thanh toán</span>
+                <strong>
+                    @(Model.PaymentMethod == "COD"
+                        ? "Thanh toán khi nhận hàng"
+                        : Model.PaymentMethod)
+                </strong>
+            </div>
+
+            <div class="order-info-item">
+                <span>Trạng thái thanh toán</span>
+                <strong>@Model.PaymentStatus</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="order-info-section">
+        <h3>Thông tin nhận hàng</h3>
+
+        <div class="order-info-grid">
+            <div class="order-info-item">
+                <span>Người nhận</span>
+                <strong>@Model.ReceiverName</strong>
+            </div>
+
+            <div class="order-info-item">
+                <span>Số điện thoại</span>
+                <strong>@Model.ReceiverPhone</strong>
+            </div>
+
+            <div class="order-info-item full-width">
+                <span>Địa chỉ giao hàng</span>
+                <strong>@Model.AddressDelivery</strong>
+            </div>
+
+            <div class="order-info-item full-width">
+                <span>Ghi chú</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.Notes)
+                        ? "Không có"
+                        : Model.Notes)
+                </strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="order-info-section">
+        <h3>Sản phẩm đã đặt</h3>
+
+        <div class="order-product-list">
+            @foreach (var item in details)
+            {
+                <div class="order-product-item">
+
+                    <div class="order-product-image">
+                        @if (!string.IsNullOrEmpty(item.Book.ImageURL))
+                        {
+                            <img src="@Url.Content(item.Book.ImageURL)"
+                                 alt="@item.Book.Title" />
+                        }
+                        else
+                        {
+                            <div class="no-order-image">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="order-product-info">
+                        <h4>@item.Book.Title</h4>
+                        <p>Số lượng: @item.Quantity</p>
+                        <p>Đơn giá: @item.UnitPrice.ToString("N0") đ</p>
+                    </div>
+
+                    <div class="order-product-subtotal">
+                        @((item.UnitPrice * item.Quantity).ToString("N0")) đ
+                    </div>
+
+                </div>
+            }
+        </div>
+
+        <div class="order-total">
+            <span>Tổng thanh toán</span>
+            <strong>@Model.TotalAmount.ToString("N0") đ</strong>
+        </div>
+        @{
+            var canCancel = new[]
+            {
+            "Chờ xác nhận",
+            "Đã xác nhận",
+            "Đang đóng gói"
+            }.Contains(Model.Status);
+        }
+
+        @if (canCancel)
+        {
+            using (Html.BeginForm(
+                "CancelOrder",
+                "Order",
+                new { id = Model.OrderID },
+                FormMethod.Post,
+                new { @class = "cancel-order-form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <button type="submit" class="cancel-order-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                    Hủy đơn hàng
+                </button>
+            }
+        }
+        @if (Model.Status == "Đang giao hàng" && Model.CompletedAt == null)
+        {
+            using (Html.BeginForm(
+            "ConfirmReceived",
+            "Order",
+            new { id = Model.OrderID },
+            FormMethod.Post,
+            new { id = "confirm-received-form", @class = "confirm-received-form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <button type="submit" class="confirm-received-btn">
+                    <i class="fa-solid fa-check"></i>
+                    Xác nhận đã nhận hàng
+                </button>
+            }
+        }
+    </section>
+
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("confirm-received-form");
+
+            if (form) {
+                form.addEventListener("submit", function (event) {
+                    const confirmed = confirm(
+                        "Bạn có chắc chắn đã nhận được đơn hàng này không?\n\n" +
+                        "Sau khi xác nhận, thời hạn yêu cầu hoàn trả sẽ bắt đầu tính trong 7 ngày."
+                    );
+
+                    if (!confirmed) {
+                        event.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+}

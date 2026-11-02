@@ -1,0 +1,190 @@
+﻿.book-delete-page {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.book-delete-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+    .book-delete-header h2 {
+        margin: 0 0 8px;
+        color: #343b63;
+        font-size: 25px;
+    }
+
+    .book-delete-header p {
+        margin: 0;
+        color: #7b8191;
+        font-size: 14px;
+    }
+
+.btn-back,
+.btn-cancel,
+.btn-confirm-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-back {
+    color: #454e83;
+    background: #e9ecf9;
+}
+
+    .btn-back:hover {
+        background: #dce1f4;
+    }
+
+.book-delete-card {
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e8eaf2;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(35, 45, 80, 0.05);
+}
+
+.delete-warning {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eceef5;
+}
+
+.warning-icon {
+    display: flex;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #b7791f;
+    background: #fff3d6;
+    font-size: 21px;
+}
+
+.delete-warning h3 {
+    margin: 0 0 7px;
+    color: #343b63;
+    font-size: 17px;
+}
+
+.delete-warning p {
+    margin: 0;
+    color: #7b8191;
+    font-size: 13px;
+}
+
+.delete-book-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 26px 0;
+}
+
+.delete-book-cover {
+    display: flex;
+    flex: 0 0 130px;
+    width: 130px;
+    height: 175px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 7px;
+    color: #9298ad;
+    background: #f4f5fa;
+    font-size: 38px;
+}
+
+    .delete-book-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+.delete-book-details {
+    flex: 1;
+}
+
+.delete-book-id {
+    color: #858b9b;
+    font-size: 12px;
+}
+
+.delete-book-details h3 {
+    margin: 9px 0 16px;
+    color: #343b63;
+    font-size: 21px;
+    line-height: 1.5;
+}
+
+.delete-book-details p {
+    margin: 10px 0;
+    color: #50586b;
+    font-size: 14px;
+}
+
+    .delete-book-details p span {
+        display: inline-block;
+        min-width: 90px;
+        color: #858b9b;
+    }
+
+.delete-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border: 1px solid #f0dfb5;
+    border-radius: 7px;
+    color: #87621d;
+    background: #fffaf0;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+    .delete-notice i {
+        margin-top: 3px;
+    }
+
+.book-delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 24px;
+}
+
+.btn-cancel {
+    color: #50586b;
+    background: #eef0f5;
+}
+
+    .btn-cancel:hover {
+        background: #dfe3ec;
+    }
+
+.btn-confirm-delete {
+    color: #ffffff;
+    background: #c65b5b;
+}
+
+    .btn-confirm-delete:hover {
+        background: #a94444;
+    }

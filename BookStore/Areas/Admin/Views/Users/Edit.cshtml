@@ -1,0 +1,114 @@
+﻿
+@model BookStore.Models.User
+
+@{
+    ViewBag.Title = "Chỉnh sửa tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Admin/css/UserEdit.css")" />
+}
+
+<div class="user-edit-page">
+
+    <div class="page-heading">
+        <div>
+            <h2>Chỉnh sửa tài khoản</h2>
+            <p>Cập nhật thông tin tài khoản trong hệ thống.</p>
+        </div>
+    </div>
+
+    <div class="user-edit-card">
+
+        @using (Html.BeginForm("Edit", "Users", FormMethod.Post,
+            new { area = "Admin" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.UserID)
+
+            @Html.ValidationSummary(false, "",
+                new { @class = "validation-summary" })
+
+            <div class="user-edit-section-title">
+                Thông tin tài khoản
+            </div>
+
+            <div class="user-edit-grid">
+
+                <div class="user-edit-field">
+                    @Html.LabelFor(model => model.FullName, "Họ và tên")
+                    @Html.TextBoxFor(model => model.FullName,
+                        new { @class = "user-edit-input", maxlength = "100" })
+                    @Html.ValidationMessageFor(model => model.FullName, "",
+                        new { @class = "field-error" })
+                </div>
+
+                <div class="user-edit-field">
+                    @Html.LabelFor(model => model.Email, "Email đăng nhập")
+                    @Html.TextBoxFor(model => model.Email,
+                        new { @class = "user-edit-input", type = "email", maxlength = "255" })
+                    @Html.ValidationMessageFor(model => model.Email, "",
+                        new { @class = "field-error" })
+                </div>
+
+                <div class="user-edit-field">
+                    @Html.LabelFor(model => model.Phone, "Số điện thoại")
+                    @Html.TextBoxFor(model => model.Phone,
+                        new { @class = "user-edit-input", maxlength = "20" })
+                    @Html.ValidationMessageFor(model => model.Phone, "",
+                        new { @class = "field-error" })
+                </div>
+
+                <div class="user-edit-field">
+                    @Html.LabelFor(model => model.Role, "Vai trò")
+                    @Html.DropDownListFor(model => model.Role,
+                        new SelectList(new[]
+                        {
+                            new SelectListItem { Value = "C", Text = "Khách hàng" },
+                            new SelectListItem { Value = "A", Text = "Quản trị viên" }
+                        }, "Value", "Text", Model.Role),
+                        new { @class = "user-edit-input" })
+                    @Html.ValidationMessageFor(model => model.Role, "",
+                        new { @class = "field-error" })
+                </div>
+
+                <div class="user-edit-field user-edit-full">
+                    @Html.LabelFor(model => model.Address, "Địa chỉ")
+                    @Html.TextAreaFor(model => model.Address,
+                        new { @class = "user-edit-input user-edit-textarea", rows = "3", maxlength = "500" })
+                    @Html.ValidationMessageFor(model => model.Address, "",
+                        new { @class = "field-error" })
+                </div>
+
+            </div>
+
+            <div class="user-edit-section-title user-edit-status-title">
+                Trạng thái tài khoản
+            </div>
+
+            <div class="user-edit-status">
+                <div>
+                    <strong>Cho phép đăng nhập</strong>
+                    <p>Bỏ chọn nếu muốn khóa tài khoản này.</p>
+                </div>
+
+                <label class="user-edit-checkbox">
+                    @Html.CheckBoxFor(model => model.IsActive)
+                    <span>Đang hoạt động</span>
+                </label>
+            </div>
+
+            <div class="user-edit-actions">
+                @Html.ActionLink("Hủy", "Index", null,
+                    new { @class = "btn-edit-cancel" })
+
+                <button type="submit" class="btn-edit-save">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Lưu thay đổi
+                </button>
+            </div>
+        }
+    </div>
+</div>

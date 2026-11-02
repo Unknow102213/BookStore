@@ -1,0 +1,140 @@
+﻿
+/* Trang chi tiết tài khoản */
+.user-details-page .page-heading {
+    margin-bottom: 24px;
+}
+
+    .user-details-page .page-heading h2 {
+        margin: 0 0 8px;
+        color: #252b42;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .user-details-page .page-heading p {
+        margin: 0;
+        color: #858b9a;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+/* Khung thông tin */
+.user-details-card {
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(31, 41, 55, 0.04);
+}
+
+/* Phần đầu thẻ */
+.user-details-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eef0f5;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: #DCE1F4;
+    color: #454e83;
+    font-size: 23px;
+}
+
+.user-details-header h3 {
+    margin: 0 0 7px;
+    color: #252b42;
+    font-size: 19px;
+}
+
+.user-details-header p {
+    margin: 0;
+    color: #858b9a;
+    font-size: 13px;
+}
+
+/* Các thông tin tài khoản */
+.user-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 36px;
+    padding-top: 8px;
+}
+
+.user-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+    padding: 20px 0;
+    border-bottom: 1px solid #eef0f5;
+}
+
+.detail-label {
+    color: #858b9a;
+    font-size: 13px;
+}
+
+.detail-value {
+    color: #30374b;
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.user-detail-address {
+    grid-column: 1 / -1;
+}
+
+/* Các nút phía dưới */
+.user-details-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #eef0f5;
+}
+
+.btn-user-back,
+.btn-user-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 11px 18px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-user-back {
+    background: #ffffff;
+    color: #555d70;
+    border-color: #dfe3ec;
+}
+
+    .btn-user-back:hover {
+        background: #f5f6fb;
+    }
+
+.btn-user-edit {
+    background: #454e83;
+    color: #ffffff;
+}
+
+    .btn-user-edit:hover {
+        background: #343e76;
+        color: #ffffff;
+    }

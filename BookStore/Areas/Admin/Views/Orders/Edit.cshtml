@@ -1,0 +1,118 @@
+﻿
+@model BookStore.Models.Order
+
+@{
+    ViewBag.Title = "Cập nhật đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Admin/css/OrderEdit.css")" />
+}
+
+<div class="order-edit-page">
+    <div class="page-heading">
+        <div>
+            <h2>Cập nhật đơn hàng</h2>
+            <p>Cập nhật trạng thái xử lý và thanh toán của đơn hàng.</p>
+        </div>
+    </div>
+
+    <div class="order-edit-card">
+        <div class="order-edit-summary">
+            <div>
+                <span>Mã đơn hàng</span>
+                <strong>#@Model.OrderID</strong>
+            </div>
+
+            <div>
+                <span>Ngày đặt</span>
+                <strong>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</strong>
+            </div>
+
+            <div>
+                <span>Tổng tiền</span>
+                <strong class="order-edit-total">
+                    @Model.TotalAmount.ToString("N0") đ
+                </strong>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("Edit", "Orders",
+            new { area = "Admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.OrderID)
+
+            @Html.ValidationSummary(false, "",
+                new { @class = "order-edit-validation" })
+
+            <div class="order-edit-form">
+                <div class="order-edit-field">
+                    @Html.LabelFor(model => model.Status, "Trạng thái đơn hàng")
+
+                    @Html.DropDownListFor(
+                        model => model.Status,
+                        new SelectList(new[]
+                        {
+                            new SelectListItem { Text = "Chờ xử lý", Value = "Chờ xử lý" },
+                            new SelectListItem { Text = "Đang chuẩn bị", Value = "Đang chuẩn bị" },
+                            new SelectListItem { Text = "Đang giao hàng", Value = "Đang giao hàng" },
+                            new SelectListItem { Text = "Đã nhận hàng", Value = "Đã nhận hàng" },
+                            new SelectListItem { Text = "Đã hủy", Value = "Đã hủy" },
+                            new SelectListItem { Text = "Đang yêu cầu trả hàng", Value = "Đang yêu cầu trả hàng" },
+                            new SelectListItem { Text = "Đã trả hàng", Value = "Đã trả hàng" }
+                        }, "Value", "Text", Model.Status),
+                        "-- Chọn trạng thái --",
+                        new { @class = "order-edit-input" })
+
+                    @Html.ValidationMessageFor(
+                        model => model.Status, "", new { @class = "order-edit-error" })
+                </div>
+
+                <div class="order-edit-field">
+                    @Html.LabelFor(model => model.PaymentStatus, "Trạng thái thanh toán")
+
+                    @Html.DropDownListFor(
+                        model => model.PaymentStatus,
+                        new SelectList(new[]
+                        {
+                            new SelectListItem { Text = "Chưa thanh toán", Value = "Chưa thanh toán" },
+                            new SelectListItem { Text = "Đã thanh toán", Value = "Đã thanh toán" },
+                            new SelectListItem { Text = "Đã hoàn tiền", Value = "Đã hoàn tiền" }
+                        }, "Value", "Text", Model.PaymentStatus),
+                        "-- Chọn trạng thái --",
+                        new { @class = "order-edit-input" })
+
+                    @Html.ValidationMessageFor(
+                        model => model.PaymentStatus, "", new { @class = "order-edit-error" })
+                </div>
+
+                <div class="order-edit-field order-edit-full">
+                    @Html.LabelFor(model => model.Notes, "Ghi chú")
+
+                    @Html.TextAreaFor(
+                        model => model.Notes,
+                        new { @class = "order-edit-input order-edit-textarea", rows = 4, maxlength = 500 })
+
+                    @Html.ValidationMessageFor(
+                        model => model.Notes, "", new { @class = "order-edit-error" })
+                </div>
+            </div>
+
+            <div class="order-edit-actions">
+                @Html.ActionLink(
+                    "Hủy",
+                    "Index",
+                    null,
+                    new { @class = "btn-order-edit-cancel" })
+
+                <button type="submit" class="btn-order-edit-save">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Lưu thay đổi
+                </button>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,104 @@
+﻿@model BookStore.Models.Book
+
+@{
+    ViewBag.Title = "Xóa sách";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/BooksDelete.css")" />
+}
+
+<div class="book-delete-page">
+    <div class="book-delete-header">
+        <div>
+            <h2>Xóa sách</h2>
+            <p>Xác nhận thao tác xóa thông tin sách khỏi hệ thống.</p>
+        </div>
+
+        <a href="@Url.Action("Index", "Books", new { area = "Admin" })"
+           class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="book-delete-card">
+        <div class="delete-warning">
+            <div class="warning-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div>
+                <h3>Bạn có chắc chắn muốn xóa sách này?</h3>
+                <p>Hãy kiểm tra thông tin trước khi xác nhận.</p>
+            </div>
+        </div>
+
+        <div class="delete-book-info">
+            <div class="delete-book-cover">
+                @if (!String.IsNullOrWhiteSpace(Model.ImageURL))
+                {
+                    <img src="@Url.Content(Model.ImageURL)" alt="@Model.Title" />
+                }
+                else
+                {
+                    <i class="fa-solid fa-book-open"></i>
+                }
+            </div>
+
+            <div class="delete-book-details">
+                <span class="delete-book-id">Mã sách: @Model.BookID</span>
+                <h3>@Model.Title</h3>
+
+                <p>
+                    <span>Tác giả:</span>
+                    @(String.IsNullOrWhiteSpace(Model.AuthorName)
+                        ? "Chưa có tác giả"
+                        : Model.AuthorName)
+                </p>
+
+                <p>
+                    <span>Thể loại:</span>
+                    @(Model.Category != null
+                        ? Model.Category.CategoryName
+                        : "Chưa phân loại")
+                </p>
+
+                <p>
+                    <span>Giá bán:</span>
+                    @Model.Price.ToString("N0") đ
+                </p>
+
+                <p>
+                    <span>Tồn kho:</span>
+                    @Model.StockQuantity
+                </p>
+            </div>
+        </div>
+
+        <div class="delete-notice">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Không thể khôi phục thông tin sau khi xóa. Nếu sách đã được sử dụng trong đơn hàng hoặc dữ liệu liên quan, hệ thống có thể không cho phép xóa.</span>
+        </div>
+
+        @using (Html.BeginForm("Delete", "Books",
+            new { area = "Admin", id = Model.BookID },
+            FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="book-delete-actions">
+                <a href="@Url.Action("Index", "Books", new { area = "Admin" })"
+                   class="btn-cancel">
+                    Hủy
+                </a>
+
+                <button type="submit" class="btn-confirm-delete">
+                    <i class="fa-solid fa-trash"></i>
+                    Xác nhận xóa
+                </button>
+            </div>
+        }
+    </div>
+</div>

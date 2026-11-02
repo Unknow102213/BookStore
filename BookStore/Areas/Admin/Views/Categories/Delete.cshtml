@@ -1,0 +1,61 @@
+﻿
+@model BookStore.Models.Category
+
+@{
+    ViewBag.Title = "Xóa thể loại";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/CategoriesDelete.css")" />
+}
+
+<div class="category-delete-page">
+    <div class="category-delete-header">
+        <h2>Xóa thể loại</h2>
+        <p>Kiểm tra thông tin trước khi xác nhận xóa.</p>
+    </div>
+
+    <div class="category-delete-card">
+        <div class="category-delete-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <h3>Bạn có chắc chắn muốn xóa thể loại này?</h3>
+
+        <p class="category-delete-description">
+            Thể loại chỉ có thể xóa khi không còn sách nào thuộc thể loại đó.
+        </p>
+
+        <div class="category-delete-info">
+            <div class="info-row">
+                <span>Mã thể loại</span>
+                <strong>@Model.CategoryID</strong>
+            </div>
+
+            <div class="info-row">
+                <span>Tên thể loại</span>
+                <strong>@Model.CategoryName</strong>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("Delete", "Categories",
+            new { area = "Admin", id = Model.CategoryID }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="category-delete-actions">
+                <button type="submit" class="btn-confirm-delete">
+                    <i class="fa-solid fa-trash"></i>
+                    Xác nhận xóa
+                </button>
+
+                <a href="@Url.Action("Index", "Categories",
+                    new { area = "Admin" })"
+                   class="btn-cancel-delete">
+                    Hủy
+                </a>
+            </div>
+        }
+    </div>
+</div>

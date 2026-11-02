@@ -1,0 +1,466 @@
+﻿
+@model BookStore.Models.Cart
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var items = Model.CartItems.ToList();
+    decimal total = items.Sum(item => item.Book.Price * item.Quantity);
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/Cart.css")" />
+}
+
+<main class="cart-page">
+    <div class="cart-heading">
+        <h1>Giỏ hàng của bạn</h1>
+        <p>Chọn những cuốn sách bạn muốn mua.</p>
+    </div>
+
+    @if (TempData["CartError"] != null)
+    {
+        <p class="cart-error">@TempData["CartError"]</p>
+    }
+
+    @if (!items.Any())
+    {
+        <div class="cart-empty">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <h2>Giỏ hàng đang trống</h2>
+            <p>Hãy chọn những cuốn sách bạn yêu thích.</p>
+
+            <a href="@Url.Action("BookIndex", "Book")"
+               class="cart-continue-btn">
+                Tiếp tục mua sắm
+            </a>
+        </div>
+    }
+    else
+    {
+        @* Form gửi danh sách sách được chọn sang trang thanh toán *@
+        using (Html.BeginForm(
+            "Checkout", "Order",
+            FormMethod.Post,
+            new { id = "checkout-form" }))
+        {
+            @Html.AntiForgeryToken()
+        }
+
+        <div class="cart-select-all">
+            <label>
+                <input type="checkbox" id="select-all" />
+                <span>Chọn tất cả (@items.Count sách)</span>
+            </label>
+        </div>
+
+        <div class="cart-content">
+            <div class="cart-items">
+                @foreach (var item in items)
+                {
+                    <div class="cart-item"
+                         data-price="@item.Book.Price.ToString(CultureInfo.InvariantCulture)">
+
+                        <div class="cart-item-select">
+                            <input type="checkbox"
+                                   class="cart-item-checkbox"
+                                   name="selectedCartItemIDs"
+                                   value="@item.CartItemID"
+                                   form="checkout-form"
+                                   checked
+                                   aria-label="Chọn @item.Book.Title" />
+                        </div>
+
+                        <img class="cart-item-image"
+                             src="@Url.Content(
+                                 string.IsNullOrWhiteSpace(item.Book.ImageURL)
+                                     ? "~/Content/img/no-book-image.png"
+                                     : item.Book.ImageURL)"
+                             alt="@item.Book.Title" />
+
+                        <div class="cart-item-info">
+                            <h3>@item.Book.Title</h3>
+
+                            <p class="cart-item-author">
+                                @(item.Book.AuthorName ?? "")
+                            </p>
+
+                            <p class="cart-item-price">
+                                @item.Book.Price.ToString("N0") đ
+                            </p>
+
+                            <div class="cart-item-actions">
+                                @using (Html.BeginForm(
+                                    "UpdateQuantity", "Cart",
+                                    FormMethod.Post,
+                                    new { @class = "cart-quantity-form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("cartItemID", item.CartItemID)
+
+                                    <label>Số lượng:</label>
+
+                                    <div class="cart-quantity-control">
+                                        <button type="button"
+                                                class="cart-quantity-btn"
+                                                data-action="decrease"
+                                                aria-label="Giảm số lượng">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+
+                                        <input type="number"
+                                               class="cart-quantity-input"
+                                               name="quantity"
+                                               value="@item.Quantity"
+                                               min="1"
+                                               max="@item.Book.StockQuantity"
+                                               required
+                                               aria-label="Số lượng sách" />
+
+                                        <button type="button"
+                                                class="cart-quantity-btn"
+                                                data-action="increase"
+                                                aria-label="Tăng số lượng">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="cart-item-right">
+                            <strong class="cart-item-subtotal">
+                                @((item.Book.Price * item.Quantity).ToString("N0")) đ
+                            </strong>
+
+                            @using (Html.BeginForm(
+                                "RemoveItem", "Cart",
+                                FormMethod.Post,
+                                new { @class = "cart-remove-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("cartItemID", item.CartItemID)
+
+                                <button type="submit"
+                                        class="cart-remove-btn">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                    Xóa
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <aside class="cart-summary">
+                <h2>Tổng đơn hàng</h2>
+
+                <div class="cart-total-row">
+                    <span id="cart-selected-count">
+                        Đã chọn @items.Count sản phẩm
+                    </span>
+
+                    <strong id="cart-total">
+                        @total.ToString("N0") đ
+                    </strong>
+                </div>
+
+                <button type="submit"
+                        id="cart-buy-btn"
+                        form="checkout-form"
+                        class="cart-summary-btn cart-buy-btn">
+                    <i class="fa-solid fa-credit-card"></i>
+                    Mua hàng
+                </button>
+
+                <a href="@Url.Action("BookIndex", "Book")"
+                   class="cart-summary-btn cart-continue-btn">
+                    Tiếp tục mua sắm
+                </a>
+            </aside>
+        </div>
+    }
+</main>
+
+@section Scripts {
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const totalElement = document.getElementById("cart-total");
+            const countElement = document.getElementById("cart-selected-count");
+            const selectAll = document.getElementById("select-all");
+            const buyButton = document.getElementById("cart-buy-btn");
+            const checkoutForm = document.getElementById("checkout-form");
+            const storageKey = "bookstore-selected-cart-items";
+
+            const checkboxes = Array.from(
+                document.querySelectorAll(".cart-item-checkbox")
+            );
+
+            function formatPrice(price) {
+                return Math.round(price).toLocaleString("vi-VN") + " đ";
+            }
+
+            function loadSelection() {
+                try {
+                    const saved = sessionStorage.getItem(storageKey);
+
+                    if (saved === null) {
+                        checkboxes.forEach(function (checkbox) {
+                            checkbox.checked = true;
+                        });
+                    } else {
+                        const selectedIDs = JSON.parse(saved);
+
+                        checkboxes.forEach(function (checkbox) {
+                            checkbox.checked = selectedIDs.includes(checkbox.value);
+                        });
+                    }
+                } catch (error) {
+                    checkboxes.forEach(function (checkbox) {
+                        checkbox.checked = true;
+                    });
+                }
+            }
+
+            function saveSelection() {
+                try {
+                    const selectedIDs = checkboxes
+                        .filter(function (checkbox) {
+                            return checkbox.checked;
+                        })
+                        .map(function (checkbox) {
+                            return checkbox.value;
+                        });
+
+                    sessionStorage.setItem(
+                        storageKey,
+                        JSON.stringify(selectedIDs)
+                    );
+                } catch (error) {
+                    console.error("Không thể lưu lựa chọn sách.", error);
+                }
+            }
+
+            function updateCartTotal() {
+                let total = 0;
+                let selectedCount = 0;
+
+                document.querySelectorAll(".cart-item").forEach(function (item) {
+                    const price = parseFloat(item.dataset.price);
+                    const input = item.querySelector(".cart-quantity-input");
+                    const checkbox = item.querySelector(".cart-item-checkbox");
+                    const quantity = parseInt(input.value, 10) || 1;
+                    const subtotal = price * quantity;
+
+                    item.querySelector(".cart-item-subtotal").textContent =
+                        formatPrice(subtotal);
+
+                    if (checkbox.checked) {
+                        total += subtotal;
+                        selectedCount++;
+                    }
+                });
+
+                totalElement.textContent = formatPrice(total);
+                countElement.textContent = "Đã chọn " + selectedCount + " sản phẩm";
+
+                selectAll.checked =
+                    checkboxes.length > 0 &&
+                    checkboxes.every(function (checkbox) {
+                        return checkbox.checked;
+                    });
+
+                selectAll.indeterminate =
+                    checkboxes.some(function (checkbox) {
+                        return checkbox.checked;
+                    }) && !selectAll.checked;
+
+                buyButton.disabled = selectedCount === 0;
+            }
+
+            loadSelection();
+            updateCartTotal();
+
+            selectAll.addEventListener("change", function () {
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = selectAll.checked;
+                });
+
+                saveSelection();
+                updateCartTotal();
+            });
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    saveSelection();
+                    updateCartTotal();
+                });
+            });
+
+            // Cập nhật số lượng lên server mà không tải lại trang.
+            async function saveQuantity(input) {
+                const form = input.closest(".cart-quantity-form");
+                const item = input.closest(".cart-item");
+                const control = input.closest(".cart-quantity-control");
+
+                if (!form || !item || input.dataset.saving === "true") {
+                    return;
+                }
+
+                const min = Number(input.min) || 1;
+                const max = Number(input.max) || Infinity;
+                let quantity = parseInt(input.value, 10);
+
+                if (!Number.isFinite(quantity)) {
+                    quantity = min;
+                }
+
+                quantity = Math.max(min, Math.min(max, quantity));
+                input.value = quantity;
+
+                const previousQuantity = Number(input.dataset.savedQuantity);
+
+                if (quantity === previousQuantity) {
+                    updateCartTotal();
+                    return;
+                }
+
+                input.dataset.saving = "true";
+                input.disabled = true;
+
+                if (control) {
+                    control.querySelectorAll("button").forEach(function (button) {
+                        button.disabled = true;
+                    });
+                }
+
+                try {
+                    const token = form.querySelector(
+                        'input[name="__RequestVerificationToken"]'
+                    );
+
+                    const cartItemID = form.querySelector(
+                        'input[name="cartItemID"]'
+                    );
+
+                    const body = new URLSearchParams({
+                        cartItemID: cartItemID.value,
+                        quantity: quantity
+                    });
+
+                    if (token) {
+                        body.append("__RequestVerificationToken", token.value);
+                    }
+
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: body.toString(),
+                        credentials: "same-origin"
+                    });
+
+                    const result = await response.json();
+
+                    if (result.redirectUrl) {
+                        window.location.href = result.redirectUrl;
+                        return;
+                    }
+
+                    if (!response.ok || !result.success) {
+                        input.value = previousQuantity;
+                        updateCartTotal();
+                        alert(result.message || "Không thể cập nhật số lượng.");
+                        return;
+                    }
+
+                    input.value = result.quantity;
+                    input.dataset.savedQuantity = result.quantity;
+
+                    // Đồng bộ lại đơn giá và số lượng từ server.
+                    item.dataset.price = result.unitPrice;
+
+                    updateCartTotal();
+                } catch (error) {
+                    input.value = previousQuantity;
+                    updateCartTotal();
+                    alert("Không thể kết nối máy chủ. Vui lòng thử lại.");
+                } finally {
+                    input.disabled = false;
+                    input.dataset.saving = "false";
+
+                    if (control) {
+                        control.querySelectorAll("button").forEach(function (button) {
+                            button.disabled = false;
+                        });
+                    }
+                }
+            }
+
+            document.querySelectorAll(".cart-quantity-input").forEach(function (input) {
+                input.dataset.savedQuantity = input.value;
+
+                const control = input.closest(".cart-quantity-control");
+
+                input.addEventListener("change", function () {
+                    saveQuantity(input);
+                });
+
+                input.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        input.blur();
+                    }
+                });
+
+                control.querySelectorAll(".cart-quantity-btn").forEach(function (button) {
+                    button.addEventListener("click", function () {
+                        if (input.disabled || input.dataset.saving === "true") {
+                            return;
+                        }
+
+                        const min = Number(input.min) || 1;
+                        const max = Number(input.max) || Infinity;
+                        let quantity = parseInt(input.value, 10) || min;
+
+                        if (button.dataset.action === "increase") {
+                            quantity++;
+                        } else {
+                            quantity--;
+                        }
+
+                        quantity = Math.max(min, Math.min(max, quantity));
+                        input.value = quantity;
+
+                        // Cập nhật tổng tiền ngay trên giao diện.
+                        updateCartTotal();
+
+                        // Lưu xuống database ở chế độ nền.
+                        saveQuantity(input);
+                    });
+                });
+            });
+
+            checkoutForm.addEventListener("submit", function (event) {
+                const hasSelectedBook = checkboxes.some(function (checkbox) {
+                    return checkbox.checked;
+                });
+
+                if (!hasSelectedBook) {
+                    event.preventDefault();
+                    alert("Vui lòng chọn ít nhất một cuốn sách để mua.");
+                    return;
+                }
+
+                saveSelection();
+            });
+        });
+
+    </script>
+}

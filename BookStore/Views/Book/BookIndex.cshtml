@@ -1,0 +1,166 @@
+﻿
+@model IEnumerable<BookStore.Models.Book>
+
+@{
+    ViewBag.Title = "Danh sách sách";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var categories = ViewBag.Categories
+        as IEnumerable<BookStore.Models.Category>;
+
+    string keyword = ViewBag.Keyword as string ?? "";
+    int? selectedCategoryId = ViewBag.CategoryId as int?;
+    string sortOrder = ViewBag.SortOrder as string ?? "";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/BookIndex.css")" />
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/BookCard.css")" />
+}
+
+<main class="book-index-page">
+    <div class="book-index-heading">
+        <h1>Danh sách sách</h1>
+        <p>Khám phá những cuốn sách dành cho bạn.</p>
+    </div>
+
+    <form method="get"
+          action="@Url.Action("BookIndex", "Book")"
+          class="book-filter-form">
+
+        <div class="book-search">
+            <input type="text"
+                   name="keyword"
+                   value="@keyword"
+                   placeholder="Nhập tên sách cần tìm..." />
+
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Tìm kiếm
+            </button>
+        </div>
+
+        <div class="book-filter-options">
+            <select name="categoryId">
+                <option value="">Tất cả thể loại</option>
+
+                @if (categories != null)
+                {
+                    foreach (var category in categories)
+                    {
+                        <option value="@category.CategoryID"
+                                @(selectedCategoryId == category.CategoryID ? "selected" : "")>
+                            @category.CategoryName
+                        </option>
+                    }
+                }
+            </select>
+
+            <select name="sortOrder">
+                <option value="" @(sortOrder == "" ? "selected" : "")>
+                    Mới nhất
+                </option>
+                <option value="price_asc"
+                        @(sortOrder == "price_asc" ? "selected" : "")>
+                    Giá tăng dần
+                </option>
+                <option value="price_desc"
+                        @(sortOrder == "price_desc" ? "selected" : "")>
+                    Giá giảm dần
+                </option>
+            </select>
+
+            <button type="submit" class="book-filter-button">
+                Áp dụng
+            </button>
+        </div>
+    </form>
+
+    <div class="book-result-heading">
+        <h2>Kết quả sách</h2>
+        <span>@(Model == null ? 0 : Model.Count()) cuốn sách</span>
+    </div>
+
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="book-index-grid">
+            @foreach (var book in Model)
+            {
+                @Html.Partial("_BookCard", book)
+            }
+        </div>
+    }
+    else
+    {
+        <div class="book-empty">
+            <i class="fa-solid fa-book-open"></i>
+            <h3>Chưa tìm thấy sách phù hợp</h3>
+            <p>Hãy thử từ khóa hoặc thể loại khác nhé.</p>
+            <a href="@Url.Action("BookIndex", "Book")">
+                Xem tất cả sách
+            </a>
+        </div>
+    }
+
+    @{
+        int currentPage = (int)ViewBag.CurrentPage;
+        int totalPages = (int)ViewBag.TotalPages;
+    }
+
+    @if (totalPages > 1)
+    {
+        <nav class="book-pagination">
+            @if (currentPage > 1)
+            {
+                @Html.ActionLink(
+                    "«",
+                    "BookIndex",
+                    new
+                    {
+                        keyword = keyword,
+                        categoryId = selectedCategoryId,
+                        sortOrder = sortOrder,
+                        page = currentPage - 1
+                    })
+            }
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                if (i == currentPage)
+                {
+                    <span class="active">@i</span>
+                }
+                else
+                {
+                    @Html.ActionLink(
+                        i.ToString(),
+                        "BookIndex",
+                        new
+                        {
+                            keyword = keyword,
+                            categoryId = selectedCategoryId,
+                            sortOrder = sortOrder,
+                            page = i
+                        })
+                }
+            }
+
+            @if (currentPage < totalPages)
+            {
+                @Html.ActionLink(
+                    "»",
+                    "BookIndex",
+                    new
+                    {
+                        keyword = keyword,
+                        categoryId = selectedCategoryId,
+                        sortOrder = sortOrder,
+                        page = currentPage + 1
+                    })
+            }
+        </nav>
+    }   
+</main>

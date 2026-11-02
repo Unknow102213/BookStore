@@ -1,0 +1,131 @@
+﻿.order-success-page {
+    width: 100%;
+    min-height: 600px;
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    color: #1f2937;
+}
+
+.success-container {
+    width: 100%;
+    max-width: 650px;
+    padding: 40px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.success-icon {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: #e8f7ee;
+    color: #269b58;
+    font-size: 34px;
+}
+
+.success-container h1 {
+    margin-bottom: 12px;
+    color: #269b58;
+    font-size: 28px;
+}
+
+.success-message {
+    margin-bottom: 30px;
+    color: #6b7280;
+    line-height: 1.7;
+}
+
+.order-info {
+    padding: 22px;
+    background: #f8f9fc;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.order-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+    .order-info-row span {
+        color: #6b7280;
+    }
+
+    .order-info-row strong {
+        text-align: right;
+        color: #1f2937;
+    }
+
+    .order-info-row.total-row {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+.total-row strong {
+    color: #454e83;
+    font-size: 20px;
+}
+
+.success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn-order-history,
+.btn-continue-shopping {
+    display: block;
+    padding: 14px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-order-history {
+    background: #454e83;
+    color: #fff;
+}
+
+    .btn-order-history:hover {
+        background: #363e6d;
+        color: #fff;
+    }
+
+.btn-continue-shopping {
+    border: 1px solid #454e83;
+    color: #454e83;
+}
+
+    .btn-continue-shopping:hover {
+        background: #f0f1f8;
+        color: #363e6d;
+    }
+
+@media (max-width: 576px) {
+    .success-container {
+        padding: 25px 18px;
+    }
+
+    .order-info-row {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .order-info-row strong {
+            text-align: left;
+        }
+}

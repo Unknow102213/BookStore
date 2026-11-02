@@ -1,0 +1,95 @@
+﻿@{
+    Layout = null;
+    string currentController = ViewContext.RouteData.Values["controller"].ToString();
+    string currentAction = ViewContext.RouteData.Values["action"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Quản trị The Book Store</title>
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/fontawesome-free-7.3.1-web/css/all.min.css")" />
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/AdminLayout.css")" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="admin-wrapper">
+
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <i class="fa-solid fa-book-open"></i>
+                <span>The Book Store</span>
+            </div>
+
+            <div class="admin-sidebar-title">QUẢN LÝ</div>
+
+            <nav class="admin-nav">
+                <a href="@Url.Action("Index", "Books" , new { area="Admin" })"
+                   class="admin-nav-link @(currentController == "Books" ? "active" : "" )">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Quản lý sách</span>
+                </a>
+
+                <a href="@Url.Action("Index", "Categories" , new { area="Admin" })"
+                   class="admin-nav-link @(currentController == "Categories" ? "active" : "" )">
+                    <i class="fa-solid fa-list"></i>
+                    <span>Quản lý thể loại</span>
+                </a>
+
+                <a href="@Url.Action("Index", "Orders" , new { area="Admin" })"
+                   class="admin-nav-link @(currentController == "Orders" ? "active" : "" )">
+                    <i class="fa-solid fa-box"></i>
+                    <span>Quản lý đơn hàng</span>
+                </a>
+
+                <a href="@Url.Action("Index", "Users" , new { area="Admin" })"
+                   class="admin-nav-link @(currentController == "Users" ? "active" : "" )">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Quản lý tài khoản</span>
+                </a>
+                <a href="@Url.Action("Index", "Reviews", new { area = "Admin" })"
+                   class="admin-nav-link @(currentController == "Reviews" ? "active" : "")">
+                    <i class="fa-solid fa-star"></i>
+                    <span>Quản lý đánh giá</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home" , new { area="" })"
+                   class="admin-nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Về trang chủ</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="admin-main">
+            <header class="admin-header">
+                <div class="admin-header-title">
+                    <span>Hệ thống quản trị</span>
+                </div>
+
+                <div class="admin-header-right">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Quản trị viên</span>
+                </div>
+            </header>
+
+            <main class="admin-content">
+                @RenderBody()
+            </main>
+
+            <footer class="admin-footer">
+                © @DateTime.Now.Year The Book Store
+            </footer>
+        </div>
+
+    </div>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

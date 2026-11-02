@@ -1,0 +1,524 @@
+﻿/* ==================================================
+   ACCOUNT CSS
+   Đăng nhập - Đăng ký - Quên mật khẩu
+   Thông tin cá nhân - Thông báo
+   ================================================== */
+
+/* ===== LOGIN / REGISTER / FORGOT PASSWORD ===== */
+.account-page {
+    width: 100%;
+    min-height: calc(100vh - 150px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background: #edf3f8;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.account-container {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.9fr);
+    align-items: stretch;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 16px 45px rgba(18, 29, 49, 0.15);
+    box-sizing: border-box;
+}
+
+/* ===== BANNER ===== */
+.account-banner {
+    min-width: 0;
+    width: 100%;
+    align-self: center;
+    overflow: hidden;
+}
+
+    .account-banner img {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+        object-fit: contain;
+    }
+
+/* ===== FORM AREA ===== */
+.account-form-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+.account-heading {
+    margin: 0 0 10px;
+    color: #141e32;
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.account-description {
+    margin: 0 0 30px;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ===== FORM FIELDS ===== */
+.account-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+    .account-field label {
+        color: #27344c;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .account-field input,
+    .account-field select,
+    .account-field textarea {
+        display: block;
+        width: 100%;
+        min-height: 46px;
+        padding: 11px 14px;
+        border: 1px solid #d4dce7;
+        border-radius: 8px;
+        outline: none;
+        background: #f9fbfd;
+        color: #1f2937;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .account-field textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+        .account-field input:focus,
+        .account-field select:focus,
+        .account-field textarea:focus {
+            border-color: #437fa1;
+            box-shadow: 0 0 0 3px rgba(67, 127, 161, 0.14);
+            background: #ffffff;
+        }
+
+        .account-field input[readonly],
+        .account-field textarea[readonly] {
+            color: #4b5563;
+            background: #f3f5f8;
+            cursor: default;
+        }
+
+/* ===== BUTTON ===== */
+.account-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 6px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #172238;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .account-submit:hover {
+        background: #437fa1;
+        color: #ffffff;
+    }
+
+    .account-submit:focus-visible {
+        outline: 3px solid rgba(67, 127, 161, 0.35);
+        outline-offset: 2px;
+    }
+
+/* ===== LINKS ===== */
+.account-links {
+    margin-top: 24px;
+    color: #687386;
+    font-size: 14px;
+    line-height: 2;
+    text-align: center;
+}
+
+    .account-links a {
+        color: #356d91;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .account-links a:hover {
+            color: #172238;
+            text-decoration: underline;
+        }
+
+/* ===== SUCCESS / ERROR NOTIFICATIONS ===== */
+.account-message {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    z-index: 9999;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    margin: 0;
+    padding: 14px 22px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    line-height: 1.5;
+    box-sizing: border-box;
+    transform: translateX(-50%);
+    animation: message-appear 0.3s ease both;
+}
+
+    .account-message.success {
+        color: #216e39;
+        background: #effaf2;
+        border-color: #b7dfc5;
+    }
+
+    .account-message.error {
+        color: #b42318;
+        background: #fff1f1;
+        border-color: #f3c4c4;
+    }
+
+    .account-message.hide {
+        animation: message-disappear 0.3s ease forwards;
+        pointer-events: none;
+    }
+
+@keyframes message-appear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes message-disappear {
+    from {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+}
+
+/* ===== REGISTER FORM ===== */
+.account-register .account-form-area {
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+
+.account-register .account-heading {
+    font-size: 28px;
+}
+
+.account-register .account-description {
+    margin-bottom: 22px;
+}
+
+.account-register .account-form {
+    gap: 13px;
+}
+
+/* ==================================================
+   CUSTOMER ACCOUNT LAYOUT
+   Thông tin cá nhân - Lịch sử đơn hàng
+   ================================================== */
+
+/* Nền khu vực tài khoản */
+.account-page:has(.account-sidebar) {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    padding: 30px;
+    background: #edf3f8;
+    box-sizing: border-box;
+}
+
+    /* Khung chứa sidebar và nội dung */
+    .account-page:has(.account-sidebar) > .account-container {
+        display: grid;
+        grid-template-columns: 250px minmax(0, 1fr);
+        align-items: start;
+        gap: 24px;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(18, 29, 49, 0.08);
+        box-sizing: border-box;
+        overflow: visible;
+    }
+
+.account-sidebar {
+    min-width: 0;
+    padding: 22px 16px;
+    background: #f5f7fc;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+.account-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    color: #454e83;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.account-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .account-nav a,
+    .account-nav-logout {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #27344c;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        text-align: left;
+        text-decoration: none;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+        .account-nav a:hover,
+        .account-nav-logout:hover {
+            color: #454e83;
+            background: #dce1f4;
+        }
+
+        .account-nav i,
+        .account-nav-logout i {
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+        }
+
+    .account-nav form {
+        width: 100%;
+        margin: 0;
+    }
+
+/* Nội dung bên phải */
+.account-content {
+    min-width: 0;
+}
+
+    /* ===== PROFILE PAGE ===== */
+    .account-content .profile-page {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+        .account-content .profile-page h2 {
+            margin: 0 0 12px;
+            color: #454e83;
+            font-size: 28px;
+        }
+
+        .account-content .profile-page > p {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+    /* ===== PROFILE FORM ===== */
+    .account-content .profile-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 24px;
+        row-gap: 24px;
+        align-items: start;
+    }
+
+        .account-content .profile-form .account-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+            .account-content .profile-form .account-field label {
+                color: #27344c;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+        .account-content .profile-form input,
+        .account-content .profile-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .account-content .profile-form input {
+            height: 46px;
+        }
+
+        .account-content .profile-form textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .account-content .profile-form .account-submit {
+            grid-column: 1 / -1;
+            width: 100%;
+            min-height: 48px;
+            margin-top: 4px;
+            background: #454e83;
+        }
+
+            .account-content .profile-form .account-submit:hover {
+                background: #303960;
+            }
+
+/* ==================================================
+   RESPONSIVE
+   ================================================== */
+@media (max-width: 760px) {
+    /* Login / Register / Forgot Password */
+    .account-page {
+        min-height: auto;
+        padding: 24px 14px;
+    }
+
+    .account-container {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 480px;
+        overflow: hidden;
+    }
+
+    .account-banner {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+    }
+
+        .account-banner img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+    .account-form-area {
+        padding: 28px 24px;
+    }
+
+    .account-heading {
+        font-size: 26px;
+    }
+
+    .account-description {
+        margin-bottom: 22px;
+    }
+
+    /* Customer account pages */
+    .account-page:has(.account-sidebar) {
+        min-height: 0;
+        padding: 16px 10px;
+    }
+
+        .account-page:has(.account-sidebar) > .account-container {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 16px;
+            padding: 14px;
+        }
+
+    .account-sidebar {
+        padding: 16px;
+    }
+
+    .account-content .profile-page {
+        padding: 10px;
+    }
+
+    .account-content .profile-form {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 18px;
+    }
+
+    .account-content .profile-page h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 420px) {
+    .account-form-area {
+        padding: 24px 18px;
+    }
+
+    .account-message {
+        top: 12px;
+        max-width: calc(100% - 24px);
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+}

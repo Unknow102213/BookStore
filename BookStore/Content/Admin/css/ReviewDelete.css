@@ -1,0 +1,148 @@
+﻿```css
+.review-delete-page {
+    width: 100%;
+    color: #1f2937;
+}
+
+.review-delete-heading {
+    margin-bottom: 24px;
+}
+
+    .review-delete-heading h2 {
+        margin: 0 0 8px;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    .review-delete-heading p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+.review-delete-panel {
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(31, 41, 55, 0.06);
+}
+
+.review-delete-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+    margin-bottom: 24px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+}
+
+    .review-delete-warning > i {
+        margin-top: 3px;
+        color: #ea580c;
+        font-size: 22px;
+    }
+
+    .review-delete-warning h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+    }
+
+    .review-delete-warning p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+.review-delete-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.review-delete-item > span {
+    display: block;
+    margin-bottom: 8px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.review-delete-item p {
+    margin: 0;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.review-delete-rating {
+    color: #92630b;
+    font-weight: 700;
+}
+
+    .review-delete-rating i {
+        color: #f4b400;
+    }
+
+.review-delete-comment {
+    grid-column: 1 / -1;
+    padding: 18px;
+    background: #f5f6fb;
+    border-radius: 8px;
+}
+
+    .review-delete-comment p {
+        white-space: pre-wrap;
+    }
+
+    .review-delete-comment em {
+        color: #9ca3af;
+    }
+
+.review-delete-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.review-delete-confirm,
+.review-delete-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.review-delete-confirm {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+    .review-delete-confirm:hover {
+        background: #b91c1c;
+    }
+
+.review-delete-cancel {
+    background: #DCE1F4;
+    color: #374151;
+}
+
+    .review-delete-cancel:hover {
+        background: #c8d0ef;
+        color: #1f2937;
+    }
+
+```

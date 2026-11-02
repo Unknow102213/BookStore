@@ -1,0 +1,155 @@
+﻿
+@model BookStore.Models.Book
+
+@{
+    ViewBag.Title = "Sửa thông tin sách";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/BooksEdit.css")" />
+}
+
+<div class="book-form-page">
+    <div class="book-form-header">
+        <div>
+            <h2>Sửa thông tin sách</h2>
+            <p>Cập nhật thông tin cho cuốn sách đã có trong hệ thống.</p>
+        </div>
+
+        <a href="@Url.Action("Index", "Books", new { area = "Admin" })"
+           class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="book-form-card">
+        @using (Html.BeginForm("Edit", "Books", new { area = "Admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.BookID)
+            @Html.HiddenFor(model => model.CreatedAt)
+
+            @Html.ValidationSummary(false, "", new { @class = "validation-summary" })
+
+            <div class="form-section-title">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Thông tin sách</span>
+            </div>
+
+            <div class="book-id-display">
+                <span>Mã sách</span>
+                <strong>@Model.BookID</strong>
+            </div>
+
+            <div class="book-form-grid">
+                <div class="form-field">
+                    @Html.LabelFor(model => model.Title, "Tên sách")
+                    @Html.TextBoxFor(model => model.Title, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Nhập tên sách..."
+                    })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "field-error" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(model => model.CategoryID, "Thể loại")
+                    @Html.DropDownList("CategoryID", null, "-- Chọn thể loại --", new
+                    {
+                        @class = "form-control"
+                    })
+                    @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "field-error" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(model => model.AuthorName, "Tác giả")
+                    @Html.TextBoxFor(model => model.AuthorName, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Nhập tên tác giả..."
+                    })
+                    @Html.ValidationMessageFor(model => model.AuthorName, "", new { @class = "field-error" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(model => model.Price, "Giá bán (VNĐ)")
+                    @Html.TextBoxFor(model => model.Price, new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0",
+                        step = "0.01",
+                        placeholder = "Nhập giá bán..."
+                    })
+                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "field-error" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(model => model.StockQuantity, "Số lượng tồn kho")
+                    @Html.TextBoxFor(model => model.StockQuantity, new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0",
+                        step = "1",
+                        placeholder = "Nhập số lượng..."
+                    })
+                    @Html.ValidationMessageFor(model => model.StockQuantity, "", new { @class = "field-error" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(model => model.ImageURL, "Đường dẫn ảnh bìa")
+                    @Html.TextBoxFor(model => model.ImageURL, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Ví dụ: ~/Content/img/books/book1.jpg"
+                    })
+                    @Html.ValidationMessageFor(model => model.ImageURL, "", new { @class = "field-error" })
+                    <small>Kiểm tra đường dẫn nếu muốn thay ảnh bìa.</small>
+                </div>
+
+                <div class="form-field form-field-full">
+                    @Html.LabelFor(model => model.Description, "Mô tả sách")
+                    @Html.TextAreaFor(model => model.Description, new
+                    {
+                        @class = "form-control description-input",
+                        rows = "5",
+                        placeholder = "Nhập nội dung giới thiệu sách..."
+                    })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "field-error" })
+                </div>
+            </div>
+
+            <div class="form-status">
+                <div>
+                    <strong>Trạng thái kinh doanh</strong>
+                    <p>Bật để sách được phép hiển thị và kinh doanh.</p>
+                </div>
+
+                <label class="status-checkbox">
+                    @Html.CheckBoxFor(model => model.IsActive)
+                    <span>Đang kinh doanh</span>
+                </label>
+            </div>
+
+            <div class="book-form-actions">
+                <a href="@Url.Action("Index", "Books", new { area = "Admin" })"
+                   class="btn-cancel">
+                    Hủy
+                </a>
+
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Lưu thay đổi
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+}

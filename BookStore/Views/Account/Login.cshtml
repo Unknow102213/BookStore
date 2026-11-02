@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/Account.css")" />
+}
+
+<main class="account-page">    
+    <div class="account-container">
+
+        <div class="account-banner">
+            <img src="@Url.Content("~/Content/img/banner_login_register.png")"
+                 alt="Chào mừng đến với The Book Store" />
+        </div>
+
+        <section class="account-form-area">
+            <h1 class="account-heading">Đăng nhập</h1>
+            <p class="account-description">
+                Chào mừng bạn quay trở lại The Book Store.
+            </p>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="account-message error">
+                    @ViewBag.Error
+                </div>
+            }
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="account-message success">
+                    @TempData["Success"]
+                </div>
+            }
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post,
+                new { @class = "account-form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="account-field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email"
+                           autocomplete="email" required />
+                </div>
+
+                <div class="account-field">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password"
+                           autocomplete="current-password" required />
+                </div>
+
+                <button type="submit" class="account-submit">
+                    Đăng nhập
+                </button>
+            }
+
+            <div class="account-links">
+                <div>
+                    @Html.ActionLink("Quên mật khẩu?", "ForgotPassword", "Account")
+                </div>
+                <div>
+                    Chưa có tài khoản?
+                    @Html.ActionLink("Đăng ký ngay", "Register", "Account")
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>

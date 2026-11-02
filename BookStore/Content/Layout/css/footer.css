@@ -1,0 +1,134 @@
+﻿/* FOOTER */
+.site-footer {
+    width: 100%;
+    margin-top: auto;
+    padding: 36px 20px 16px;
+    background-color: #DCE1F4;
+    color: #1f2937;
+}
+
+.footer-inner {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1.2fr 0.7fr;
+    gap: 28px;
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+}
+
+.footer-col {
+    min-width: 0;
+}
+
+    .footer-col h3 {
+        margin: 0 0 16px;
+        color: #d97706;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 1.5;
+        text-transform: uppercase;
+    }
+
+.footer-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .footer-list li {
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+        .footer-list li span {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+    .footer-list a {
+        color: #4b5563;
+        transition: color 0.2s ease;
+    }
+
+        .footer-list a:hover {
+            color: #d97706;
+            text-decoration: underline;
+        }
+
+.footer-logo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+    .footer-logo img {
+        display: block;
+        width: 130px;
+        height: 130px;
+        object-fit: contain;
+    }
+
+.footer-bottom {
+    width: 100%;
+    max-width: 1200px;
+    margin: 28px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid #c5cbe3;
+    text-align: center;
+}
+
+    .footer-bottom p {
+        margin: 0;
+        color: #4b5563;
+        font-size: 13px;
+        font-style: italic;
+        line-height: 1.6;
+    }
+
+/* TABLET */
+@media (max-width: 900px) {
+    .footer-inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 24px;
+    }
+
+    .footer-logo {
+        justify-content: flex-start;
+    }
+
+        .footer-logo img {
+            width: 90px;
+            height: 90px;
+        }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+    .site-footer {
+        padding: 28px 18px 16px;
+    }
+
+    .footer-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+
+    .footer-col h3 {
+        margin-bottom: 10px;
+    }
+
+    .footer-logo {
+        justify-content: center;
+    }
+
+        .footer-logo img {
+            width: 80px;
+            height: 80px;
+        }
+
+    .footer-bottom {
+        margin-top: 22px;
+    }
+}

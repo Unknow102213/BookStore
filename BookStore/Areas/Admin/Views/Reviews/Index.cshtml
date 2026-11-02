@@ -1,0 +1,87 @@
+﻿@model IEnumerable<BookStore.Models.Review>
+
+@{
+    ViewBag.Title = "Quản lý đánh giá";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/ReviewsIndex.css")" />
+}
+
+<div class="reviews-page">
+    <div class="reviews-heading">
+        <div>
+            <h2>Quản lý đánh giá</h2>
+            <p>Xem và quản lý đánh giá sách từ khách hàng.</p>
+        </div>        
+    </div>
+
+    <div class="reviews-panel">
+        <div class="reviews-table-wrapper">
+            <table class="reviews-table">
+                <thead>
+                    <tr>
+                        <th>Mã đánh giá</th>
+                        <th>Tên sách</th>
+                        <th>Email khách hàng</th>
+                        <th>Đánh giá</th>                        
+                        <th>Thời gian</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>#@item.ReviewID</td>
+                                <td class="review-book">
+                                    @(item.Book != null ? item.Book.Title : "Không xác định")
+                                </td>
+                                <td>
+                                    @(item.User != null ? item.User.Email : "Không xác định")
+                                </td>
+                                <td>
+                                    <span class="review-rating">
+                                        <i class="fa-solid fa-star"></i>
+                                        @item.Rating/5
+                                    </span>
+                                </td>                                
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                                </td>
+                                <td>
+                                    <div class="review-actions">
+                                        @Html.ActionLink(
+                                            "Chi tiết",
+                                            "Details",
+                                            new { id = item.ReviewID },
+                                            new { @class = "review-btn review-btn-details" }
+                                        )
+
+                                        @Html.ActionLink(
+                                            "Xóa",
+                                            "Delete",
+                                            new { id = item.ReviewID },
+                                            new { @class = "review-btn review-btn-delete" }
+                                        )
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="reviews-empty">
+                                Chưa có đánh giá nào.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

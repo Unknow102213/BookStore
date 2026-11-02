@@ -1,0 +1,120 @@
+﻿@model BookStore.Models.Book
+
+@{
+    ViewBag.Title = "Chi tiết sách";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/BooksDetails.css")" />
+}
+
+<div class="book-details-page">
+    <div class="book-details-header">
+        <div>
+            <h2>Chi tiết sách</h2>
+            <p>Xem đầy đủ thông tin của cuốn sách trong hệ thống.</p>
+        </div>
+
+        <a href="@Url.Action("Index", "Books", new { area = "Admin" })"
+           class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="book-details-card">
+        <div class="book-details-top">
+            <div class="book-cover">
+                @if (!String.IsNullOrWhiteSpace(Model.ImageURL))
+                {
+                    <img src="@Url.Content(Model.ImageURL)" alt="@Model.Title" />
+                }
+                else
+                {
+                    <div class="book-cover-placeholder">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Chưa có ảnh bìa</span>
+                    </div>
+                }
+            </div>
+
+            <div class="book-main-info">
+                <span class="book-id">Mã sách: @Model.BookID</span>
+                <h3>@Model.Title</h3>
+
+                <p class="book-author">
+                    <i class="fa-solid fa-user-pen"></i>
+                    @(String.IsNullOrWhiteSpace(Model.AuthorName)
+                        ? "Chưa có tác giả"
+                        : Model.AuthorName)
+                </p>
+
+                <div class="book-price">
+                    @Model.Price.ToString("N0") đ
+                </div>
+
+                @if (Model.IsActive)
+                {
+                    <span class="book-status status-active">Đang kinh doanh</span>
+                }
+                else
+                {
+                    <span class="book-status status-inactive">Ngừng kinh doanh</span>
+                }
+            </div>
+        </div>
+
+        <div class="book-details-section">
+            <h4>Thông tin chi tiết</h4>
+
+            <div class="details-grid">
+                <div class="details-item">
+                    <span>Thể loại</span>
+                    <strong>
+                        @(Model.Category != null
+                            ? Model.Category.CategoryName
+                            : "Chưa phân loại")
+                    </strong>
+                </div>
+
+                <div class="details-item">
+                    <span>Số lượng tồn kho</span>
+                    <strong>@Model.StockQuantity</strong>
+                </div>
+
+                <div class="details-item">
+                    <span>Ngày tạo</span>
+                    <strong>
+                        @(Model.CreatedAt != null
+                            ? Convert.ToDateTime(Model.CreatedAt).ToString("dd/MM/yyyy HH:mm")
+                            : "Chưa có thông tin")
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="book-description">
+            <h4>Mô tả sách</h4>
+            <p>
+                @(String.IsNullOrWhiteSpace(Model.Description)
+                    ? "Chưa có mô tả cho sách này."
+                    : Model.Description)
+            </p>
+        </div>
+
+        <div class="book-details-actions">
+            <a href="@Url.Action("Edit", "Books", new { area = "Admin", id = Model.BookID })"
+               class="btn-edit">
+                <i class="fa-solid fa-pen"></i>
+                Sửa thông tin
+            </a>
+
+            <a href="@Url.Action("Delete", "Books", new { area = "Admin", id = Model.BookID })"
+               class="btn-delete">
+                <i class="fa-solid fa-trash"></i>
+                Xóa sách
+            </a>
+        </div>
+    </div>
+</div>

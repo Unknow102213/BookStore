@@ -1,0 +1,108 @@
+﻿
+@model BookStore.Models.Book
+
+@{
+    ViewBag.Title = "Chi tiết sách";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/Content/Customer/css/BookDetails.css")"
+          rel="stylesheet" />
+}
+
+<div class="book-details-page">
+    <div class="book-details-breadcrumb">
+        <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <a href="@Url.Action("Index", "Books")">Danh sách sách</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span>Chi tiết sách</span>
+    </div>
+
+    <div class="book-details-container">
+        <div class="book-details-image">
+            @if (!string.IsNullOrWhiteSpace(Model.ImageURL))
+            {
+                <img src="@Url.Content(Model.ImageURL)"
+                     alt="@Model.Title" />
+            }
+            else
+            {
+                <div class="book-image-placeholder">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Chưa có ảnh bìa</span>
+                </div>
+            }
+        </div>
+
+        <div class="book-details-info">
+            <span class="book-details-label">THÔNG TIN SÁCH</span>
+
+            <h1>@Model.Title</h1>
+
+            <div class="book-details-meta">
+                <p>
+                    <span>Tác giả:</span>
+                    @(string.IsNullOrWhiteSpace(Model.AuthorName)
+                        ? "Chưa cập nhật"
+                        : Model.AuthorName)
+                </p>
+
+                <p>
+                    <span>Thể loại:</span>
+                    @(Model.Category == null
+                        ? "Chưa phân loại"
+                        : Model.Category.CategoryName)
+                </p>
+            </div>
+
+            <div class="book-details-price">
+                @Model.Price.ToString("N0") đ
+            </div>
+
+            <div class="book-details-stock">
+                @if (Model.StockQuantity > 0)
+                {
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Còn hàng (@Model.StockQuantity cuốn)</span>
+                }
+                else
+                {
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Hết hàng</span>
+                }
+            </div>
+
+            <div class="book-details-divider"></div>
+
+            <div class="book-details-description">
+                <h3>Giới thiệu sách</h3>
+
+                @if (string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <p>Chưa có thông tin giới thiệu cho cuốn sách này.</p>
+                }
+                else
+                {
+                    <p>@Model.Description</p>
+                }
+            </div>
+
+            <div class="book-details-actions">
+                <button type="button"
+                        class="book-add-cart"
+                        disabled="@(Model.StockQuantity <= 0)"
+                        title="Chức năng giỏ hàng sẽ được bổ sung sau">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    Thêm vào giỏ hàng
+                </button>
+
+                <a class="book-back-button"
+                   href="@Url.Action("Index", "Books")">
+                    Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

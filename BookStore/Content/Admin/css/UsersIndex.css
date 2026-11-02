@@ -1,0 +1,146 @@
+﻿body {
+}
+
+/* ==============================
+   TRANG QUẢN LÝ TÀI KHOẢN
+============================== */
+
+/* Tiêu đề trang */
+.users-page .page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+    .users-page .page-heading h2 {
+        margin: 0 0 8px;
+        color: #252b42;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .users-page .page-heading p {
+        margin: 0;
+        color: #858b9a;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+/* Khung chứa bảng */
+.users-page .table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(31, 41, 55, 0.04);
+}
+
+/* Bảng tài khoản */
+.users-page .admin-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+    /* Tiêu đề cột */
+    .users-page .admin-table thead {
+        background: #f5f6fb;
+    }
+
+    .users-page .admin-table th {
+        padding: 16px;
+        color: #555d70;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    /* Nội dung từng ô */
+    .users-page .admin-table td {
+        padding: 16px;
+        color: #4b5563;
+        vertical-align: middle;
+        border-bottom: 1px solid #eef0f5;
+    }
+
+    /* Bỏ đường viền ở hàng cuối */
+    .users-page .admin-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Hiệu ứng di chuột */
+    .users-page .admin-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    /* Mã tài khoản */
+    .users-page .admin-table td:first-child {
+        color: #454e83;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* Email */
+    .users-page .admin-table td:nth-child(3) {
+        overflow-wrap: anywhere;
+    }
+
+    /* Trạng thái khi chưa có tài khoản */
+    .users-page .admin-table td[colspan] {
+        padding: 36px 16px;
+        color: #858b9a;
+        text-align: center;
+    }
+
+    /* Các liên kết thao tác */
+    .users-page .admin-table td a {
+        display: inline-block;
+        color: #454e83;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+        .users-page .admin-table td a:hover {
+            color: #6976b8;
+            text-decoration: underline;
+        }
+
+/* Trạng thái tài khoản */
+.users-page .user-status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .users-page .user-status.active {
+        background: #e7f6ec;
+        color: #267442;
+    }
+
+    .users-page .user-status.locked {
+        background: #fdecec;
+        color: #b42318;
+    }
+
+/* Vai trò */
+.users-page .user-role {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #eef0fb;
+    color: #454e83;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+

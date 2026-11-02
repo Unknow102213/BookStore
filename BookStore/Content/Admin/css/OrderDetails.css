@@ -1,0 +1,146 @@
+﻿
+.order-details-page .page-heading {
+    margin-bottom: 24px;
+}
+
+    .order-details-page .page-heading h2 {
+        margin: 0 0 8px;
+        color: #252b42;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .order-details-page .page-heading p {
+        margin: 0;
+        color: #858b9a;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+.order-details-card {
+    padding: 28px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(31, 41, 55, 0.04);
+}
+
+.order-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eef0f5;
+}
+
+.order-details-label {
+    color: #858b9a;
+    font-size: 13px;
+}
+
+.order-details-header h3 {
+    margin: 8px 0 0;
+    color: #30374b;
+    font-size: 22px;
+}
+
+.order-details-status {
+    display: inline-block;
+    padding: 8px 12px;
+    color: #454e83;
+    background: #eef0fb;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.order-details-section {
+    padding: 24px 0;
+    border-bottom: 1px solid #eef0f5;
+}
+
+    .order-details-section h4 {
+        margin: 0 0 22px;
+        color: #30374b;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 32px;
+}
+
+.order-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+    .order-info-item span {
+        color: #858b9a;
+        font-size: 13px;
+    }
+
+    .order-info-item strong {
+        color: #3f4659;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+    .order-info-item .order-total {
+        color: #454e83;
+        font-size: 17px;
+    }
+
+.order-info-full {
+    grid-column: 1 / -1;
+}
+
+.order-details-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-order-back,
+.btn-order-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 145px;
+    padding: 11px 18px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-order-back {
+    color: #555d70;
+    background: #fff;
+    border-color: #dfe3ec;
+}
+
+    .btn-order-back:hover {
+        background: #f5f6fb;
+    }
+
+.btn-order-edit {
+    color: #fff;
+    background: #454e83;
+}
+
+    .btn-order-edit:hover {
+        color: #fff;
+        background: #343e76;
+    }

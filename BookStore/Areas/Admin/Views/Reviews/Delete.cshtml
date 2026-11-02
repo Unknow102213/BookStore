@@ -1,0 +1,92 @@
+﻿```cshtml
+@model BookStore.Models.Review
+
+@{
+    ViewBag.Title = "Xóa đánh giá";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/ReviewDelete.css")" />
+}
+
+<div class="review-delete-page">
+    <div class="review-delete-heading">
+        <h2>Xóa đánh giá</h2>
+        <p>Xác nhận xóa đánh giá của khách hàng.</p>
+    </div>
+
+    <div class="review-delete-panel">
+        <div class="review-delete-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+                <h3>Bạn có chắc chắn muốn xóa đánh giá này?</h3>
+                <p>Đánh giá sẽ bị xóa khỏi hệ thống và không thể khôi phục.</p>
+            </div>
+        </div>
+
+        <div class="review-delete-info">
+            <div class="review-delete-item">
+                <span>Mã đánh giá</span>
+                <p>#@Model.ReviewID</p>
+            </div>
+
+            <div class="review-delete-item">
+                <span>Tên sách</span>
+                <p>@(Model.Book != null ? Model.Book.Title : "Không xác định")</p>
+            </div>
+
+            <div class="review-delete-item">
+                <span>Email khách hàng</span>
+                <p>@(Model.User != null ? Model.User.Email : "Không xác định")</p>
+            </div>
+
+            <div class="review-delete-item">
+                <span>Đánh giá</span>
+                <p class="review-delete-rating">
+                    <i class="fa-solid fa-star"></i>
+                    @Model.Rating/5 sao
+                </p>
+            </div>
+
+            <div class="review-delete-item">
+                <span>Thời gian</span>
+                <p>@Html.DisplayFor(model => model.CreatedAt)</p>
+            </div>
+
+            <div class="review-delete-item review-delete-comment">
+                <span>Nội dung đánh giá</span>
+                <p>
+                    @if (string.IsNullOrWhiteSpace(Model.Comment))
+                    {
+                        <em>Khách hàng không để lại nhận xét.</em>
+                    }
+                    else
+                    {
+                        @Model.Comment
+                    }
+                </p>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="review-delete-actions">
+                <button type="submit" class="review-delete-confirm">
+                    <i class="fa-solid fa-trash"></i>
+                    Xác nhận xóa
+                </button>
+
+                @Html.ActionLink(
+                    "Hủy",
+                    "Index",
+                    null,
+                    new { @class = "review-delete-cancel" }
+                )
+            </div>
+        }
+    </div>
+</div>
+```

@@ -1,0 +1,203 @@
+﻿
+@{
+    Layout = null;
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - The Book Store</title>
+
+    <link href="@Url.Content("~/Content/Layout/css/base.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Layout/css/header.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Layout/css/menu.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Layout/css/footer.css")" rel="stylesheet" />
+
+    <link href="@Url.Content("~/Content/Customer/css/CartModal.css")" rel="stylesheet" />
+
+    <link href="@Url.Content("~/Content/fontawesome-free-7.3.1-web/css/all.min.css")" rel="stylesheet" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="@Url.Action("Index", "Home")" class="header-logo">
+                <img src="@Url.Content("~/Content/Layout/img/Logo.jpg")"
+                     alt="The Book Store" />
+                <span>The Book Store</span>
+            </a>
+
+            <form class="header-search"
+                  action="@Url.Action("Index", "Home")"
+                  method="get">
+                <input type="search"
+                       name="search"
+                       placeholder="Tìm kiếm sách..."
+                       aria-label="Tìm kiếm sách" />
+                <button type="submit" aria-label="Tìm kiếm">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+
+            <div class="header-actions">
+                <details class="account-menu">
+                    <summary class="header-action">
+                        <i class="fa-solid fa-user"></i>
+
+                        @if (Session["UserID"] != null)
+                        {
+                            <span>Xin chào, @(Session["FullName"] ?? Session["UserEmail"])</span>
+                        }
+                        else
+                        {
+                            <span>Tài khoản</span>
+                        }
+
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </summary>
+
+                    <div class="account-dropdown">
+                        @if (Session["UserID"] != null)
+                        {
+                            <a href="@Url.Action("MyProfile", "Account")">
+                                <i class="fa-solid fa-user-pen"></i>
+                                Thông tin cá nhân
+                            </a>
+
+                            if (Session["UserRole"] != null &&
+                                Session["UserRole"].ToString() == "A")
+                            {
+                                <a href="@Url.Action("Index", "Books", new { area = "Admin" })">
+                                    <i class="fa-solid fa-gear"></i>
+                                    Quản trị
+                                </a>
+                            }
+
+                            <a href="@Url.Action("Logout", "Account")">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                Đăng xuất
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Login", "Account")">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                Đăng nhập
+                            </a>
+
+                            <a href="@Url.Action("Register", "Account")">
+                                <i class="fa-solid fa-user-plus"></i>
+                                Đăng ký
+                            </a>
+                        }
+                    </div>
+                </details>
+
+                <a href="@Url.Action("CartIndex", "Cart")"
+                   class="header-action">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Giỏ hàng</span>
+
+                    @Html.Action("CartCount", "Cart")
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="site-menu">
+        <div class="menu-inner">
+            <a href="@Url.Action("Index", "Home")"
+               class="menu-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">
+                <i class="fa-solid fa-house"></i>&nbsp; Trang chủ
+            </a>
+
+            <a href="@Url.Action("BookIndex", "Book")" class="menu-link">
+                Danh sách sách
+            </a>
+
+            <a href="@Url.Action("Index", "Home")#featured" class="menu-link">
+                Sách nổi bật
+            </a>
+
+            <a href="@Url.Action("Index", "Home")#bestsellers" class="menu-link">
+                Sách bán chạy
+            </a>
+
+            <a href="@Url.Action("Index", "Home")#recommended" class="menu-link">
+                Đề cử
+            </a>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <h3>Trang web được tạo bởi</h3>
+                <ul class="footer-list">
+                    <li>Trần Tuấn Vũ - <span>25DH230101</span></li>
+                    <li>Phạm Lê Huy Hoàng - <span>25DH230046</span></li>
+                    <li>Trần Tú Uyên - <span>25DH230032</span></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Danh mục chính</h3>
+                <ul class="footer-list">
+                    <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li><a href="@Url.Action("Index", "Book")">Sách giáo khoa</a></li>
+                    <li><a href="@Url.Action("Index", "Book")">Sách ngoại ngữ</a></li>
+                    <li><a href="@Url.Action("Index", "Book")">Sách văn học</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Hỗ trợ khách hàng</h3>
+                <ul class="footer-list">
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    <li><a href="#">Chính sách đổi trả</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                    <li><a href="#">Phương thức thanh toán</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col footer-logo">
+                <img src="@Url.Content("~/Content/Layout/img/Logo.jpg")"
+                     alt="Logo The Book Store" />
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Cảm ơn bạn đã ghé thăm The Book Store!</p>
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+
+    <script src="@Url.Content("~/Scripts/Customer/CartModal.js")"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const messages = document.querySelectorAll(".account-message");
+
+            messages.forEach(function (message) {
+                setTimeout(function () {
+                    message.classList.add("hide");
+
+                    setTimeout(function () {
+                        message.remove();
+                    }, 300);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+﻿
+@model IEnumerable<BookStore.Models.User>
+
+@{
+    ViewBag.Title = "Quản lý tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Admin/css/UsersIndex.css")" />
+}
+
+<div class="users-page">
+    <div class="page-heading">
+        <div>
+            <h2>Quản lý tài khoản</h2>
+            <p>Danh sách tài khoản trong hệ thống.</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Mã tài khoản</th>
+                    <th>Họ và tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.UserID</td>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@(string.IsNullOrEmpty(user.Phone) ? "Chưa cập nhật" : user.Phone)</td>
+                            <td>
+                                @(user.Role == "A" ? "Admin" : "Khách hàng")
+                            </td>
+                            <td>
+                                @(user.IsActive ? "Đang hoạt động" : "Đã khóa")
+                            </td>
+                            <td>
+                                @Html.ActionLink(
+                                    "Chi tiết",
+                                    "Details",
+                                    new { id = user.UserID }
+                                )
+                                |
+                                @Html.ActionLink(
+                                    "Sửa",
+                                    "Edit",
+                                    new { id = user.UserID }
+                                )
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" style="text-align:center;">
+                            Chưa có tài khoản nào.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

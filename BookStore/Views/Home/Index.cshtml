@@ -1,0 +1,122 @@
+﻿@model BookStore.ViewModels.HomeViewModel
+
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/Home.css")" />
+
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/BookCard.css")" />
+}
+
+<main class="home-page">
+
+    <!-- Banner hình ảnh -->
+    <section class="home-banner">
+        <img src="@Url.Content("~/Content/img/Home_Banner.png")"
+             alt="Banner giới thiệu The Book Store" />
+    </section>
+
+    <!-- Sách nổi bật -->
+    @if (Model.FeaturedBooks.Any())
+    {
+        <section class="home-book-section">
+            <div class="home-section-heading">
+                <h2>Sách nổi bật</h2>
+            </div>
+
+            <div class="home-book-list">
+                @foreach (var book in Model.FeaturedBooks)
+                {
+                    @Html.Partial("_BookCard", book)
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Sách đề cử -->
+    @if (Model.RecommendedBooks.Any())
+    {
+        <section class="home-book-section">
+            <div class="home-section-heading">
+                <h2>Sách đề cử</h2>
+            </div>
+
+            <div class="home-book-list">
+                @foreach (var book in Model.RecommendedBooks)
+                {
+                    @Html.Partial("_BookCard", book)
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Sách bán chạy -->
+    @if (Model.BestSellingBooks.Any())
+    {
+        <section class="home-book-section">
+            <div class="home-section-heading">
+                <h2>Sách bán chạy</h2>
+            </div>
+
+            <div class="home-book-list">
+                @foreach (var book in Model.BestSellingBooks)
+                {
+                    @Html.Partial("_BookCard", book)
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Sách mới cập nhật -->
+    @if (Model.NewBooks.Any())
+    {
+        <section class="home-book-section">
+            <div class="home-section-heading">
+                <h2>Sách mới cập nhật</h2>
+            </div>
+
+            <div class="home-book-list">
+                @foreach (var book in Model.NewBooks)
+                {
+                    @Html.Partial("_BookCard", book)
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Sách theo thể loại -->
+    @foreach (var category in Model.Categories)
+    {
+        var categoryBooks = category.Books
+            .Where(b => b.IsActive)
+            .OrderByDescending(b => b.CreatedAt)
+            .ToList();
+
+        if (categoryBooks.Any())
+        {
+            <section class="home-book-section">
+                <div class="home-section-heading">
+                    <h2>@category.CategoryName</h2>
+
+                    <a class="home-more-link"
+                       href="@Url.Action("BookIndex", "Book", new { categoryId = category.CategoryID })">
+                        Tìm thêm <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="home-book-list">
+                    @foreach (var book in categoryBooks)
+                    {
+                        @Html.Partial("_BookCard", book)
+                    }
+                </div>
+            </section>
+        }
+    }
+
+</main>

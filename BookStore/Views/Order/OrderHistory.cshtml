@@ -1,0 +1,103 @@
+﻿@model IEnumerable<BookStore.Models.Order>
+
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_CustomerAccountLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/OrderHistory.css")" />
+}
+<main class="order-history-page">
+
+    <div class="order-history-container">
+
+        <div class="order-history-header">
+            <h1>Lịch sử đơn hàng</h1>
+            <p>Theo dõi những đơn hàng bạn đã đặt tại The Book Store.</p>            
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="order-list">
+
+                @foreach (var order in Model)
+                {
+                    <div class="order-card">
+
+                        <div class="order-card-header">
+                            <div>
+                                <span class="order-label">Mã đơn hàng</span>
+                                <strong>#@order.OrderID</strong>
+                            </div>
+
+                            <span class="order-status">
+                                @order.Status
+                            </span>
+                        </div>
+
+                        <div class="order-card-body">
+
+                            <div class="order-info-item">
+                                <span>Ngày đặt hàng</span>
+                                <strong>
+                                    @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                </strong>
+                            </div>
+
+                            <div class="order-info-item">
+                                <span>Người nhận</span>
+                                <strong>@order.ReceiverName</strong>
+                            </div>
+
+                            <div class="order-info-item">
+                                <span>Thanh toán</span>
+                                <strong>@order.PaymentMethod</strong>
+                            </div>
+
+                            <div class="order-info-item">
+                                <span>Tổng tiền</span>
+                                <strong class="order-total">
+                                    @order.TotalAmount.ToString("N0") VNĐ
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="order-card-footer">
+
+                            <a href="@Url.Action("OrderDetails", "Order",
+                                new { id = order.OrderID })"
+                               class="order-detail-btn">
+                                Xem chi tiết
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-orders">
+
+                <i class="fa-solid fa-box-open"></i>
+
+                <h2>Bạn chưa có đơn hàng nào</h2>
+
+                <p>Các đơn hàng bạn đặt sẽ được hiển thị tại đây.</p>
+
+                <a href="@Url.Action("Index", "Home")">
+                    Khám phá sách
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</main>

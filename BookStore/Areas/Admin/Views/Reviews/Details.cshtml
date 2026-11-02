@@ -1,0 +1,75 @@
+﻿```cshtml
+@model BookStore.Models.Review
+
+@{
+    ViewBag.Title = "Chi tiết đánh giá";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/ReviewDetails.css")" />
+}
+
+<div class="review-details-page">
+    <div class="review-details-heading">
+        <div>
+            <h2>Chi tiết đánh giá</h2>
+            <p>Xem thông tin đánh giá của khách hàng.</p>
+        </div>
+    </div>
+
+    <div class="review-details-panel">
+        <div class="review-details-top">
+            <div>
+                <span class="review-details-label">Mã đánh giá</span>
+                <h3>#@Model.ReviewID</h3>
+            </div>
+
+            <div class="review-details-rating">
+                <i class="fa-solid fa-star"></i>
+                <span>@Model.Rating/5 sao</span>
+            </div>
+        </div>
+
+        <div class="review-details-content">
+            <div class="review-details-item">
+                <span class="review-details-label">Tên sách</span>
+                <p>@(Model.Book != null ? Model.Book.Title : "Không xác định")</p>
+            </div>
+
+            <div class="review-details-item">
+                <span class="review-details-label">Email khách hàng</span>
+                <p>@(Model.User != null ? Model.User.Email : "Không xác định")</p>
+            </div>
+
+            <div class="review-details-item">
+                <span class="review-details-label">Thời gian đánh giá</span>
+                <p>@Html.DisplayFor(model => model.CreatedAt)</p>
+            </div>
+
+            <div class="review-details-item review-details-comment">
+                <span class="review-details-label">Nội dung đánh giá</span>
+                <p>
+                    @if (string.IsNullOrWhiteSpace(Model.Comment))
+                    {
+                        <span class="review-details-empty">Khách hàng không để lại nhận xét.</span>
+                    }
+                    else
+                    {
+                        @Model.Comment
+                    }
+                </p>
+            </div>
+        </div>
+
+        <div class="review-details-actions">
+            @Html.ActionLink(
+                "Quay lại danh sách",
+                "Index",
+                null,
+                new { @class = "review-details-back" }
+            )
+        </div>
+    </div>
+</div>
+```

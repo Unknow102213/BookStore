@@ -1,0 +1,91 @@
+﻿
+@model IEnumerable<BookStore.Models.Category>
+
+@{
+    ViewBag.Title = "Quản lý thể loại";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/CategoriesIndex.css")" />
+}
+
+<div class="categories-page">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="category-message category-message-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="category-message category-message-error">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="categories-page-header">
+        <div>
+            <h2>Quản lý thể loại</h2>
+            <p>Quản lý các thể loại dùng để phân loại sách.</p>
+        </div>
+
+        <a href="@Url.Action("Create", "Categories", new { area = "Admin" })"
+           class="btn-add-category">
+            <i class="fa-solid fa-plus"></i>
+            Thêm thể loại
+        </a>
+    </div>
+
+    <div class="categories-table-wrapper">
+        <table class="categories-table">
+            <thead>
+                <tr>
+                    <th class="column-id">Mã thể loại</th>
+                    <th class="column-name">Tên thể loại</th>
+                    <th class="column-actions">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="category-id">
+                                @item.CategoryID
+                            </td>
+
+                            <td class="category-name">
+                                @item.CategoryName
+                            </td>
+
+                            <td>
+                                <div class="category-actions">
+                                    <a href="@Url.Action("Delete", "Categories", new { area = "Admin", id = item.CategoryID })"
+                                       class="btn-action btn-delete"
+                                       title="Xóa thể loại"
+                                       aria-label="Xóa thể loại">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="categories-empty">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <p>Chưa có thể loại nào.</p>
+                            <span>Nhấn "Thêm thể loại" để tạo thể loại đầu tiên.</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

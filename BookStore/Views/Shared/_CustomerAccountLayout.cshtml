@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="@Url.Content("~/Content/Customer/css/Account.css")" rel="stylesheet" />
+
+@RenderSection("Styles", required: false)
+
+<div class="account-page">
+    <div class="account-container">
+        <aside class="account-sidebar">
+            <div class="account-sidebar-title">
+                <i class="fa-solid fa-user-circle"></i>
+                <span>Tài khoản của tôi</span>
+            </div>
+
+            <nav class="account-nav">
+                <a href="@Url.Action("MyProfile", "Account")">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Thông tin cá nhân</span>
+                </a>
+
+                <a href="@Url.Action("OrderHistory", "Order")">
+                    <i class="fa-solid fa-box"></i>
+                    <span>Lịch sử đơn hàng</span>
+                </a>
+
+                @using (Html.BeginForm("Logout", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit" class="account-nav-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Đăng xuất</span>
+                    </button>
+                }
+            </nav>
+        </aside>
+
+        <section class="account-content">
+            @RenderBody()
+        </section>
+    </div>
+</div>
+@RenderSection("Scripts", required: false)

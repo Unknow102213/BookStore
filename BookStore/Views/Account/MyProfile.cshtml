@@ -1,0 +1,41 @@
+﻿
+@model BookStore.Models.User
+
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_CustomerAccountLayout.cshtml";
+}
+
+<div class="profile-page">
+    <h2>Thông tin cá nhân</h2>
+    <p>Quản lý thông tin tài khoản của bạn.</p>
+
+    <div class="profile-form">
+        <div class="account-field">
+            <label>Họ và tên</label>
+            <input type="text" value="@Model.FullName" readonly />
+        </div>
+
+        <div class="account-field">
+            <label>Email</label>
+            <input type="email" value="@Model.Email" readonly />
+        </div>
+
+        <div class="account-field">
+            <label>Số điện thoại</label>
+            <input type="text"
+                   value="@(string.IsNullOrWhiteSpace(Model.Phone) ? "Chưa cập nhật" : Model.Phone)"
+                   readonly />
+        </div>
+
+        <div class="account-field">
+            <label>Địa chỉ</label>
+            <textarea rows="3" readonly>@(string.IsNullOrWhiteSpace(Model.Address) ? "Chưa cập nhật" : Model.Address)</textarea>
+        </div>
+
+        <button type="button" class="account-submit"
+                onclick="location.href='@Url.Action("EditProfile", "Account")'">
+            Chỉnh sửa thông tin
+        </button>
+    </div>
+</div>

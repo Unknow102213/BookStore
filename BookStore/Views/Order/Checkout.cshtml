@@ -1,0 +1,131 @@
+﻿@model BookStore.ViewModels.CheckoutViewModel
+
+@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Customer/css/Checkout.css")" />
+}
+
+<main class="checkout-page">
+    <div class="checkout-heading">
+        <h1>Thanh toán</h1>
+        <p>Kiểm tra thông tin đơn hàng trước khi đặt mua.</p>
+    </div>
+
+    @using (Html.BeginForm("PlaceOrder", "Order", FormMethod.Post, new { @class = "checkout-form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        for (int i = 0; i < Model.SelectedCartItemIDs.Count; i++)
+        {
+            @Html.HiddenFor(m => m.SelectedCartItemIDs[i])
+        }
+
+        <div class="checkout-layout">
+            <section class="checkout-left">
+                <div class="checkout-section">
+                    <h2><i class="fa-solid fa-location-dot"></i> Thông tin nhận hàng</h2>
+
+                    <div class="checkout-field">
+                        @Html.LabelFor(m => m.ReceiverName, "Họ và tên người nhận")
+                        @Html.TextBoxFor(m => m.ReceiverName, new { placeholder = "Nhập họ tên người nhận" })
+                        @Html.ValidationMessageFor(m => m.ReceiverName)
+                    </div>
+
+                    <div class="checkout-field">
+                        @Html.LabelFor(m => m.ReceiverPhone, "Số điện thoại")
+                        @Html.TextBoxFor(m => m.ReceiverPhone, new { placeholder = "Nhập số điện thoại", type = "tel" })
+                        @Html.ValidationMessageFor(m => m.ReceiverPhone)
+                    </div>
+
+                    <div class="checkout-field">
+                        @Html.LabelFor(m => m.AddressDelivery, "Địa chỉ giao hàng")
+                        @Html.TextAreaFor(m => m.AddressDelivery, new { placeholder = "Nhập địa chỉ nhận hàng", rows = 3 })
+                        @Html.ValidationMessageFor(m => m.AddressDelivery)
+                    </div>
+
+                    <div class="checkout-field">
+                        @Html.LabelFor(m => m.Notes, "Ghi chú (không bắt buộc)")
+                        @Html.TextAreaFor(m => m.Notes, new { placeholder = "Ghi chú cho người giao hàng...", rows = 2 })
+                        @Html.ValidationMessageFor(m => m.Notes)
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <h2><i class="fa-solid fa-credit-card"></i> Phương thức thanh toán</h2>
+
+                    <div class="checkout-payment">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <div>
+                            <strong>Thanh toán khi nhận hàng (COD)</strong>
+                            <p>Thanh toán trực tiếp khi nhận được sách.</p>
+                        </div>
+                        <i class="fa-solid fa-circle-check checkout-checked"></i>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="checkout-right">
+                <div class="checkout-section">
+                    <h2>Đơn hàng của bạn</h2>
+
+                    <div class="checkout-items">
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="checkout-item">
+                                <img src="@Url.Content(
+                                    string.IsNullOrWhiteSpace(item.ImageURL)
+                                        ? "~/Content/img/no-book-image.png"
+                                        : item.ImageURL)"
+                                     alt="@item.Title" />
+
+                                <div class="checkout-item-info">
+                                    <h3>@item.Title</h3>
+                                    <p>Số lượng: @item.Quantity</p>
+                                    <strong>@item.Subtotal.ToString("N0") đ</strong>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="checkout-total">
+                        <span>Tổng thanh toán</span>
+                        <strong>@Model.TotalAmount.ToString("N0") đ</strong>
+                    </div>
+
+                    <button type="submit" class="checkout-submit">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        Đặt hàng
+                    </button>
+
+                    <a href="@Url.Action("CartIndex", "Cart")" class="checkout-back">
+                        Quay lại giỏ hàng
+                    </a>
+                </div>
+            </aside>
+        </div>
+    }
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkoutForm = document.querySelector(".checkout-form");
+
+            checkoutForm.addEventListener("submit", function (event) {
+                const confirmed = confirm(
+                    "Bạn có chắc chắn muốn đặt đơn hàng này không?"
+                );
+
+                if (!confirmed) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+}

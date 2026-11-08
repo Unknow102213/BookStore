@@ -84,8 +84,7 @@ body {
     padding: 0 12px;
 }
 
-    .admin-nav a,
-    .admin-sidebar-bottom a {
+    .admin-nav a{
         display: flex;
         align-items: center;
         gap: 12px;
@@ -97,14 +96,12 @@ body {
         transition: background 0.2s, color 0.2s;
     }
 
-        .admin-nav a i,
-        .admin-sidebar-bottom a i {
+        .admin-nav a i{
             width: 18px;
             text-align: center;
         }
 
-        .admin-nav a:hover,
-        .admin-sidebar-bottom a:hover {
+        .admin-nav a:hover{
             background: #f1f2fa;
             color: #454e83;
         }
@@ -124,12 +121,6 @@ body {
                 background: transparent;
                 color: #858b9a;
             }
-
-.admin-sidebar-bottom {
-    margin-top: auto;
-    padding: 18px 12px;
-    border-top: 1px solid #eef0f5;
-}
 
 /* Khu vực nội dung bên phải */
 .admin-main {

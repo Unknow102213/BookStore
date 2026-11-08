@@ -1,9 +1,55 @@
-﻿
-@model BookStore.Models.Order
+﻿@model BookStore.Models.Order
 
 @{
     ViewBag.Title = "Cập nhật đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var nextStatuses = new List<SelectListItem>();
+
+    switch (Model.Status)
+    {
+        case "Chờ xử lý":
+            nextStatuses.Add(new SelectListItem
+            {
+                Text = "Đang chuẩn bị",
+                Value = "Đang chuẩn bị"
+            });
+            nextStatuses.Add(new SelectListItem
+            {
+                Text = "Đã hủy",
+                Value = "Đã hủy"
+            });
+            break;
+
+        case "Đang chuẩn bị":
+            nextStatuses.Add(new SelectListItem
+            {
+                Text = "Đang giao hàng",
+                Value = "Đang giao hàng"
+            });
+            nextStatuses.Add(new SelectListItem
+            {
+                Text = "Đã hủy",
+                Value = "Đã hủy"
+            });
+            break;
+
+        case "Đang giao hàng":
+            nextStatuses.Add(new SelectListItem
+            {
+                Text = "Đã nhận hàng",
+                Value = "Đã nhận hàng"
+            });
+            break;
+
+        case "Đang yêu cầu trả hàng":
+            nextStatuses.Add(new SelectListItem
+            {
+                Text = "Đã trả hàng",
+                Value = "Đã trả hàng"
+            });
+            break;
+    }
 }
 
 @section Styles {
@@ -15,7 +61,7 @@
     <div class="page-heading">
         <div>
             <h2>Cập nhật đơn hàng</h2>
-            <p>Cập nhật trạng thái xử lý và thanh toán của đơn hàng.</p>
+            <p>Cập nhật trạng thái xử lý của đơn hàng.</p>
         </div>
     </div>
 
@@ -52,41 +98,25 @@
                 <div class="order-edit-field">
                     @Html.LabelFor(model => model.Status, "Trạng thái đơn hàng")
 
-                    @Html.DropDownListFor(
-                        model => model.Status,
-                        new SelectList(new[]
-                        {
-                            new SelectListItem { Text = "Chờ xử lý", Value = "Chờ xử lý" },
-                            new SelectListItem { Text = "Đang chuẩn bị", Value = "Đang chuẩn bị" },
-                            new SelectListItem { Text = "Đang giao hàng", Value = "Đang giao hàng" },
-                            new SelectListItem { Text = "Đã nhận hàng", Value = "Đã nhận hàng" },
-                            new SelectListItem { Text = "Đã hủy", Value = "Đã hủy" },
-                            new SelectListItem { Text = "Đang yêu cầu trả hàng", Value = "Đang yêu cầu trả hàng" },
-                            new SelectListItem { Text = "Đã trả hàng", Value = "Đã trả hàng" }
-                        }, "Value", "Text", Model.Status),
-                        "-- Chọn trạng thái --",
-                        new { @class = "order-edit-input" })
+                    @if (nextStatuses.Count > 0)
+                    {
+                        @Html.DropDownListFor(
+                            model => model.Status,
+                            nextStatuses,
+                            "-- Chọn trạng thái tiếp theo --",
+                            new { @class = "order-edit-input" })
+                    }
+                    else
+                    {
+                        <input type="text"
+                               class="order-edit-input"
+                               value="@Model.Status"
+                               disabled />
+                    }
 
                     @Html.ValidationMessageFor(
-                        model => model.Status, "", new { @class = "order-edit-error" })
-                </div>
-
-                <div class="order-edit-field">
-                    @Html.LabelFor(model => model.PaymentStatus, "Trạng thái thanh toán")
-
-                    @Html.DropDownListFor(
-                        model => model.PaymentStatus,
-                        new SelectList(new[]
-                        {
-                            new SelectListItem { Text = "Chưa thanh toán", Value = "Chưa thanh toán" },
-                            new SelectListItem { Text = "Đã thanh toán", Value = "Đã thanh toán" },
-                            new SelectListItem { Text = "Đã hoàn tiền", Value = "Đã hoàn tiền" }
-                        }, "Value", "Text", Model.PaymentStatus),
-                        "-- Chọn trạng thái --",
-                        new { @class = "order-edit-input" })
-
-                    @Html.ValidationMessageFor(
-                        model => model.PaymentStatus, "", new { @class = "order-edit-error" })
+                        model => model.Status, "",
+                        new { @class = "order-edit-error" })
                 </div>
 
                 <div class="order-edit-field order-edit-full">
@@ -94,10 +124,16 @@
 
                     @Html.TextAreaFor(
                         model => model.Notes,
-                        new { @class = "order-edit-input order-edit-textarea", rows = 4, maxlength = 500 })
+                        new
+                        {
+                            @class = "order-edit-input order-edit-textarea",
+                            rows = 4,
+                            maxlength = 500
+                        })
 
                     @Html.ValidationMessageFor(
-                        model => model.Notes, "", new { @class = "order-edit-error" })
+                        model => model.Notes, "",
+                        new { @class = "order-edit-error" })
                 </div>
             </div>
 
@@ -108,10 +144,13 @@
                     null,
                     new { @class = "btn-order-edit-cancel" })
 
-                <button type="submit" class="btn-order-edit-save">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    Lưu thay đổi
-                </button>
+                @if (nextStatuses.Count > 0)
+                {
+                    <button type="submit" class="btn-order-edit-save">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Lưu thay đổi
+                    </button>
+                }
             </div>
         }
     </div>

@@ -1,4 +1,5 @@
-﻿
+﻿@model BookStore.ViewModels.LoginViewModel
+
 @{
     ViewBag.Title = "Đăng nhập";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +10,7 @@
           href="@Url.Content("~/Content/Customer/css/Account.css")" />
 }
 
-<main class="account-page">    
+<main class="account-page">
     <div class="account-container">
 
         <div class="account-banner">
@@ -22,6 +23,8 @@
             <p class="account-description">
                 Chào mừng bạn quay trở lại The Book Store.
             </p>
+
+            @Html.ValidationSummary(false, "", new { @class = "account-message error" })
 
             @if (ViewBag.Error != null)
             {
@@ -42,15 +45,22 @@
                 @Html.AntiForgeryToken()
 
                 <div class="account-field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email"
-                           autocomplete="email" required />
+                    @Html.LabelFor(m => m.Email, "Email")
+                    @Html.TextBoxFor(m => m.Email, new
+                    {
+                        type = "email",
+                        autocomplete = "email"
+                    })
+                    @Html.ValidationMessageFor(m => m.Email)
                 </div>
 
                 <div class="account-field">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password"
-                           autocomplete="current-password" required />
+                    @Html.LabelFor(m => m.Password, "Mật khẩu")
+                    @Html.PasswordFor(m => m.Password, new
+                    {
+                        autocomplete = "current-password"
+                    })
+                    @Html.ValidationMessageFor(m => m.Password)
                 </div>
 
                 <button type="submit" class="account-submit">

@@ -17,6 +17,7 @@ namespace BookStore.Areas.Admin.Controllers
         // GET: Admin/Users
         public ActionResult Index()
         {
+            ViewBag.UserCount = db.Users.Count();
             var users = db.Users.OrderBy(u => u.UserID).ToList();
             return View(users);
         }

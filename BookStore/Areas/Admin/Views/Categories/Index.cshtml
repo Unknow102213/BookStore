@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<BookStore.Models.Category>
+﻿@model IEnumerable<BookStore.Models.Category>
 
 @{
     ViewBag.Title = "Quản lý thể loại";
@@ -30,7 +29,11 @@
             <h2>Quản lý thể loại</h2>
             <p>Quản lý các thể loại dùng để phân loại sách.</p>
         </div>
-
+    
+        <div class="index-summary">
+            Tổng số danh mục: <strong>@ViewBag.CategoryCount</strong>
+        </div>
+    
         <a href="@Url.Action("Create", "Categories", new { area = "Admin" })"
            class="btn-add-category">
             <i class="fa-solid fa-plus"></i>

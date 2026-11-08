@@ -17,6 +17,7 @@ namespace BookStore.Areas.Admin.Controllers
         // GET: Admin/Orders
         public ActionResult Index()
         {
+            ViewBag.OrderCount = db.Orders.Count();
             var orders = db.Orders.Include(o => o.User);
             return View(orders.ToList());
         }
@@ -28,11 +29,16 @@ namespace BookStore.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order order = db.Orders.Find(id);
+
+            Order order = db.Orders
+                .Include(o => o.OrderDetails.Select(od => od.Book))
+                .FirstOrDefault(o => o.OrderID == id);
+
             if (order == null)
             {
                 return HttpNotFound();
             }
+
             return View(order);
         }
 
@@ -58,29 +64,80 @@ namespace BookStore.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(
-            [Bind(Include = "OrderID,Status,PaymentStatus,Notes")] Order formOrder)
+        public ActionResult Edit([Bind(Include = "OrderID,Status,Notes")] Order formOrder)
         {
-            if (ModelState.IsValid)
-            {
-                Order order = db.Orders.Find(formOrder.OrderID);
-                if (order == null)
-                {
-                    return HttpNotFound();
-                }
-                order.Status = formOrder.Status;
-                order.PaymentStatus = formOrder.PaymentStatus;
-                order.Notes = formOrder.Notes;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            Order currentOrder = db.Orders.Find(formOrder.OrderID);
-            if (currentOrder == null)
+            Order order = db.Orders.Find(formOrder.OrderID);
+
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            formOrder.OrderDate = currentOrder.OrderDate;
-            formOrder.TotalAmount = currentOrder.TotalAmount;
+
+            if (ModelState.IsValid)
+            {
+                string currentStatus = order.Status;
+                string newStatus = formOrder.Status;
+
+                // Kiểm tra trạng thái được phép chuyển
+                bool isValidTransition = false;
+
+                if (currentStatus == "Chờ xử lý" &&
+                    (newStatus == "Đang chuẩn bị" || newStatus == "Đã hủy"))
+                {
+                    isValidTransition = true;
+                }
+                else if (currentStatus == "Đang chuẩn bị" &&
+                    (newStatus == "Đang giao hàng" || newStatus == "Đã hủy"))
+                {
+                    isValidTransition = true;
+                }
+                else if (currentStatus == "Đang giao hàng" &&
+                    newStatus == "Đã nhận hàng")
+                {
+                    isValidTransition = true;
+                }
+                else if (currentStatus == "Đang yêu cầu trả hàng" &&
+                    newStatus == "Đã trả hàng")
+                {
+                    isValidTransition = true;
+                }
+
+                if (!isValidTransition)
+                {
+                    ModelState.AddModelError("Status",
+                        "Trạng thái chuyển đổi không hợp lệ.");
+
+                    formOrder.OrderDate = order.OrderDate;
+                    formOrder.TotalAmount = order.TotalAmount;
+
+                    return View(formOrder);
+                }
+
+                // Cập nhật trạng thái đơn hàng
+                order.Status = newStatus;
+                order.Notes = formOrder.Notes;
+
+                // Tự động cập nhật trạng thái thanh toán
+                if (newStatus == "Đã nhận hàng" &&
+                    order.PaymentStatus == "Chưa thanh toán")
+                {
+                    order.PaymentStatus = "Đã thanh toán";
+                }
+
+                if (newStatus == "Đã trả hàng" &&
+                    order.PaymentStatus == "Đã thanh toán")
+                {
+                    order.PaymentStatus = "Đã hoàn tiền";
+                }
+
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            formOrder.OrderDate = order.OrderDate;
+            formOrder.TotalAmount = order.TotalAmount;
+
             return View(formOrder);
         }
 

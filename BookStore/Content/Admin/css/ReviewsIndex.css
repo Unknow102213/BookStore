@@ -1,5 +1,4 @@
-﻿```css
-.reviews-page {
+﻿.reviews-page {
     width: 100%;
     color: #1f2937;
 }
@@ -23,7 +22,19 @@
         color: #6b7280;
         font-size: 14px;
     }
+.index-summary {
+    margin: 15px 0 20px;
+    padding: 12px 16px;
+    background-color: #DCE1F4;
+    border-radius: 8px;
+    color: #454e83;
+    font-size: 15px;
+}
 
+    .index-summary strong {
+        font-size: 18px;
+        margin-left: 5px;
+    }
 .reviews-panel {
     background: #ffffff;
     border-radius: 12px;
@@ -125,5 +136,3 @@
     text-align: center;
     color: #6b7280;
 }
-
-```

@@ -17,6 +17,7 @@ namespace BookStore.Areas.Admin.Controllers
         // GET: Admin/Books
         public ActionResult Index()
         {
+            ViewBag.BookCount = db.Books.Count();
             var books = db.Books.Include(b => b.Category);
             return View(books.ToList());
         }

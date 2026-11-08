@@ -82,26 +82,50 @@
                 </div>
             </div>
         </div>
+        <div class="order-details-section">
+            <h3>Danh sách sách đã mua</h3>
 
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Tên sách</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <tr>
+                            <td>@item.Book.Title</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.UnitPrice.ToString("N0") đ</td>
+                            <td>@((item.Quantity * item.UnitPrice).ToString("N0")) đ</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
         <div class="order-details-section">
             <h4>Thông tin người nhận</h4>
 
             <div class="order-info-grid">
                 <div class="order-info-item">
-                    <span>Tên khách hàng</span>
-                    <strong>
-                        @(Model.User != null
-                            ? Model.User.Email
-                            : "Không xác định")
-                    </strong>
-                </div>
-
-                <div class="order-info-item">
-                    <span>Người nhận</span>
+                    <span>Tên người nhận</span>
                     <strong>
                         @(string.IsNullOrEmpty(Model.ReceiverName)
-                            ? "Chưa cập nhật"
-                            : Model.ReceiverName)
+                        ? "Chưa cập nhật"
+                        : Model.ReceiverName)
+                    </strong>
+                </div>
+                <div class="order-info-item">
+                    <span>Email khách hàng</span>
+                    <strong>
+                        @(Model.User != null
+                        ? Model.User.Email
+                        : "Không xác định")
                     </strong>
                 </div>
 
@@ -109,17 +133,17 @@
                     <span>Số điện thoại</span>
                     <strong>
                         @(string.IsNullOrEmpty(Model.ReceiverPhone)
-                            ? "Chưa cập nhật"
-                            : Model.ReceiverPhone)
+                        ? "Chưa cập nhật"
+                        : Model.ReceiverPhone)
                     </strong>
                 </div>
 
-                <div class="order-info-item order-info-full">
+                <div class="order-info-item">
                     <span>Địa chỉ giao hàng</span>
                     <strong>
                         @(string.IsNullOrEmpty(Model.AddressDelivery)
-                            ? "Chưa cập nhật"
-                            : Model.AddressDelivery)
+                        ? "Chưa cập nhật"
+                        : Model.AddressDelivery)
                     </strong>
                 </div>
 
@@ -127,8 +151,8 @@
                     <span>Ghi chú</span>
                     <strong>
                         @(string.IsNullOrEmpty(Model.Notes)
-                            ? "Không có ghi chú"
-                            : Model.Notes)
+                        ? "Không có ghi chú"
+                        : Model.Notes)
                     </strong>
                 </div>
             </div>
@@ -141,11 +165,14 @@
                 null,
                 new { @class = "btn-order-back" })
 
-            @Html.ActionLink(
-                "Cập nhật đơn hàng",
-                "Edit",
-                new { id = Model.OrderID },
-                new { @class = "btn-order-edit" })
+            @if (Model.Status != "Đã giao hàng" || Model.Status != "Đã hủy")
+            {
+                @Html.ActionLink(
+                    "Cập nhật đơn hàng",
+                    "Edit",
+                    new { id = Model.OrderID },
+                    new { @class = "btn-order-edit" })
+            }
         </div>
     </div>
 </div>

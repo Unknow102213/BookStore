@@ -1,4 +1,5 @@
-﻿
+﻿@model BookStore.ViewModels.RegisterViewModel
+
 @{
     ViewBag.Title = "Đăng ký";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,7 +11,7 @@
 }
 
 <main class="account-page">
-    <div class="account-container account-register">        
+    <div class="account-container account-register">
         <div class="account-banner">
             <img src="@Url.Content("~/Content/img/banner_login_register.png")"
                  alt="Chào mừng đến với The Book Store" />
@@ -22,6 +23,8 @@
             <p class="account-description">
                 Đăng ký để khám phá thế giới sách cùng chúng tôi.
             </p>
+
+            @Html.ValidationSummary(false, "", new { @class = "account-message error" })
 
             @if (ViewBag.Error != null)
             {
@@ -36,45 +39,44 @@
                 @Html.AntiForgeryToken()
 
                 <div class="account-field">
-                    <label for="fullName">Họ và tên</label>
-                    <input type="text"
-                           id="fullName"
-                           name="fullName"
-                           maxlength="100"
-                           autocomplete="name"
-                           required />
+                    @Html.LabelFor(m => m.FullName, "Họ và tên")
+                    @Html.TextBoxFor(m => m.FullName, new
+                    {
+                        maxlength = "100",
+                        autocomplete = "name"
+                    })
+                    @Html.ValidationMessageFor(m => m.FullName)
                 </div>
 
                 <div class="account-field">
-                    <label for="email">Email</label>
-                    <input type="email"
-                           id="email"
-                           name="email"
-                           maxlength="255"
-                           autocomplete="email"
-                           required />
+                    @Html.LabelFor(m => m.Email, "Email")
+                    @Html.TextBoxFor(m => m.Email, new
+                    {
+                        type = "email",
+                        maxlength = "255",
+                        autocomplete = "email"
+                    })
+                    @Html.ValidationMessageFor(m => m.Email)
                 </div>
 
                 <div class="account-field">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password"
-                           id="password"
-                           name="password"
-                           minlength="8"
-                           maxlength="72"
-                           autocomplete="new-password"
-                           required />
+                    @Html.LabelFor(m => m.Password, "Mật khẩu")
+                    @Html.PasswordFor(m => m.Password, new
+                    {
+                        minlength = "8",
+                        maxlength = "72",
+                        autocomplete = "new-password"
+                    })
+                    @Html.ValidationMessageFor(m => m.Password)
                 </div>
 
                 <div class="account-field">
-                    <label for="confirmPassword">Xác nhận mật khẩu</label>
-                    <input type="password"
-                           id="confirmPassword"
-                           name="confirmPassword"
-                           minlength="8"
-                           maxlength="72"
-                           autocomplete="new-password"
-                           required />
+                    @Html.LabelFor(m => m.ConfirmPassword, "Xác nhận mật khẩu")
+                    @Html.PasswordFor(m => m.ConfirmPassword, new
+                    {
+                        autocomplete = "new-password"
+                    })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
                 </div>
 
                 <button type="submit" class="account-submit">

@@ -20,6 +20,7 @@ namespace BookStore.Areas.Admin.Controllers
                 .Include(r => r.User)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToList();
+            ViewBag.ReviewCount = db.Reviews.Count();
 
             return View(reviews);
         }

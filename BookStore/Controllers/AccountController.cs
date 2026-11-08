@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using BookStore.Models;
+using BookStore.ViewModels;
 
 namespace BookStore.Controllers
 {
@@ -14,47 +14,49 @@ namespace BookStore.Controllers
         public ActionResult Login()
         {
             if (Session["UserID"] != null)
-                return RedirectToAction("Index", "Home");
+            {
+                if (Session["UserRole"]?.ToString() == "A")
+                    return RedirectToAction("Index", "Books", new { area = "Admin" });
 
-            return View();
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(new LoginViewModel());
         }
 
         // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string email, string password)
+        public ActionResult Login(LoginViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(email) ||
-                string.IsNullOrWhiteSpace(password))
-            {
-                ViewBag.Error = "Vui lòng nhập email và mật khẩu.";
-                return View();
-            }
+            if (!ModelState.IsValid)
+                return View(model);
 
-            email = email.Trim();
+            string email = model.Email.Trim();
 
-            User user = db.Users.FirstOrDefault(
-                u => u.Email == email
-            );
+            User user = db.Users.FirstOrDefault(u => u.Email == email);
 
             if (user == null ||
                 string.IsNullOrEmpty(user.PasswordHash) ||
-                !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
             {
                 ViewBag.Error = "Email hoặc mật khẩu không chính xác.";
-                return View();
+                return View(model);
             }
 
             if (!user.IsActive)
             {
                 ViewBag.Error = "Tài khoản đã bị vô hiệu hóa.";
-                return View();
+                return View(model);
             }
 
             Session["UserID"] = user.UserID;
             Session["UserEmail"] = user.Email;
             Session["FullName"] = user.FullName;
             Session["UserRole"] = user.Role;
+
+            if (user.Role == "A")
+                return RedirectToAction("Index", "Books", new { area = "Admin" });
 
             return RedirectToAction("Index", "Home");
         }
@@ -65,87 +67,44 @@ namespace BookStore.Controllers
             if (Session["UserID"] != null)
                 return RedirectToAction("Index", "Home");
 
-            return View();
+            return View(new RegisterViewModel());
         }
 
         // POST: Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(
-            string fullName,
-            string email,
-            string password,
-            string confirmPassword)
+        public ActionResult Register(RegisterViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(fullName) ||
-                string.IsNullOrWhiteSpace(email) ||
-                string.IsNullOrWhiteSpace(password) ||
-                string.IsNullOrWhiteSpace(confirmPassword))
-            {
-                ViewBag.Error = "Vui lòng nhập đầy đủ thông tin.";
-                return View();
-            }
+            if (!ModelState.IsValid)
+                return View(model);
 
-            fullName = fullName.Trim();
-            email = email.Trim();
+            string email = model.Email.Trim();
 
-            if (fullName.Length > 100)
-            {
-                ViewBag.Error = "Họ tên không được vượt quá 100 ký tự.";
-                return View();
-            }
-
-            if (email.Length > 255)
-            {
-                ViewBag.Error = "Email không được vượt quá 255 ký tự.";
-                return View();
-            }
-
-            if (password.Length < 8)
-            {
-                ViewBag.Error = "Mật khẩu phải có ít nhất 8 ký tự.";
-                return View();
-            }
-
-            if (password.Length > 72)
-            {
-                ViewBag.Error = "Mật khẩu không được vượt quá 72 ký tự.";
-                return View();
-            }
-
-            if (password != confirmPassword)
-            {
-                ViewBag.Error = "Mật khẩu xác nhận không khớp.";
-                return View();
-            }
-
-            bool emailExists = db.Users.Any(
-                u => u.Email == email
-            );
+            bool emailExists = db.Users.Any(u => u.Email == email);
 
             if (emailExists)
             {
-                ViewBag.Error = "Email này đã được đăng ký.";
-                return View();
+                ModelState.AddModelError("Email",
+                    "Email này đã được đăng ký.");
+                return View(model);
             }
 
-            User newUser = new User();
-
-            newUser.FullName = fullName;
-            newUser.Email = email;
-            newUser.PasswordHash =
-                BCrypt.Net.BCrypt.HashPassword(password);
-            newUser.Role = "C";
-            newUser.IsActive = true;
-            newUser.CreatedAt = DateTime.Now;
-            newUser.Phone = null;
-            newUser.Address = null;
+            User newUser = new User
+            {
+                FullName = model.FullName.Trim(),
+                Email = email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                Role = "C",
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                Phone = null,
+                Address = null
+            };
 
             db.Users.Add(newUser);
             db.SaveChanges();
 
-            TempData["Success"] =
-                "Đăng ký thành công! Bạn có thể đăng nhập.";
+            TempData["Success"] = "Đăng ký thành công! Bạn có thể đăng nhập.";
 
             return RedirectToAction("Login");
         }

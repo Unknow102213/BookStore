@@ -1,7 +1,4 @@
-﻿body {
-}
-
-/* ==============================
+﻿/* ==============================
    TRANG QUẢN LÝ TÀI KHOẢN
 ============================== */
 
@@ -28,6 +25,19 @@
         line-height: 1.6;
     }
 
+.index-summary {
+    margin: 15px 0 20px;
+    padding: 12px 16px;
+    background-color: #DCE1F4;
+    border-radius: 8px;
+    color: #454e83;
+    font-size: 15px;
+}
+
+    .index-summary strong {
+        font-size: 18px;
+        margin-left: 5px;
+    }
 /* Khung chứa bảng */
 .users-page .table-container {
     width: 100%;

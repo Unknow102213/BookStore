@@ -16,6 +16,10 @@
             <p>Quản lý thông tin và số lượng sách trong cửa hàng.</p>
         </div>
 
+        <div class="index-summary">
+            Tổng số sách: <strong>@ViewBag.BookCount</strong>
+        </div>
+
         <a href="@Url.Action("Create", "Books", new { area = "Admin" })"
            class="btn-add-book">
             <i class="fa-solid fa-plus"></i>

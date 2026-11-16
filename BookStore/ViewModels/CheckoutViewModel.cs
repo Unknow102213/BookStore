@@ -8,23 +8,27 @@ namespace BookStore.ViewModels
 {
     public class CheckoutViewModel
     {
+        public string CheckoutError { get; set; }
         public List<int> SelectedCartItemIDs { get; set; }
 
         public List<CheckoutItemViewModel> Items { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập họ tên người nhận.")]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Họ tên không được vượt quá 100 ký tự.")]
         public string ReceiverName { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập số điện thoại.")]
-        [StringLength(15)]
+        [RegularExpression(
+            @"^(03[2-9]|05[25689]|07[06789]|08[1-9]|09[0-9])[0-9]{7}$",
+            ErrorMessage = "Số điện thoại không hợp lệ. Vui lòng nhập số di động Việt Nam gồm 10 chữ số."
+        )]
         public string ReceiverPhone { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập địa chỉ giao hàng.")]
-        [StringLength(500)]
+        [StringLength(255, ErrorMessage = "Địa chỉ giao hàng không được vượt quá 255 ký tự.")]
         public string AddressDelivery { get; set; }
 
-        [StringLength(500)]
+        [StringLength(500, ErrorMessage = "Ghi chú không được vượt quá 500 ký tự.")]
         public string Notes { get; set; }
 
         public decimal TotalAmount { get; set; }

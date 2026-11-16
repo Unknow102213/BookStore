@@ -1,4 +1,9 @@
-﻿.order-history-page {
+﻿
+/* ==============================
+   TRANG LỊCH SỬ ĐƠN HÀNG
+============================== */
+
+.order-history-page {
     width: 100%;
     min-height: 600px;
     padding: 40px 20px 60px;
@@ -10,8 +15,10 @@
     margin: 0 auto;
 }
 
+/* Tiêu đề */
+
 .order-history-header {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
     .order-history-header h1 {
@@ -21,8 +28,65 @@
     }
 
     .order-history-header p {
+        margin: 0;
         color: #6b7280;
     }
+
+/* Thông báo */
+
+.order-message {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #dce1f4;
+    border-radius: 8px;
+    background: #eef0fa;
+    color: #454e83;
+    font-size: 14px;
+}
+
+/* ==============================
+   TAB TRẠNG THÁI
+============================== */
+
+.order-status-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.order-status-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border: 1px solid #dce1f4;
+    border-radius: 8px;
+    background: #fff;
+    color: #454e83;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+    .order-status-tab:hover {
+        background: #eef0fa;
+        border-color: #454e83;
+        color: #363e6d;
+    }
+
+    .order-status-tab.active {
+        background: #454e83;
+        border-color: #454e83;
+        color: #fff;
+    }
+
+/* ==============================
+   DANH SÁCH ĐƠN HÀNG
+============================== */
 
 .order-list {
     display: flex;
@@ -35,7 +99,14 @@
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
+    transition: box-shadow 0.2s ease;
 }
+
+    .order-card:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+
+/* Phần đầu đơn hàng */
 
 .order-card-header {
     display: flex;
@@ -52,24 +123,35 @@
         gap: 5px;
     }
 
-.order-label,
-.order-info-item span {
+.order-label {
     color: #6b7280;
     font-size: 13px;
 }
 
-.order-status {
+.order-card-header strong {
+    font-size: 15px;
+}
+
+/* Trạng thái */
+
+.order-history-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 7px 12px;
     border-radius: 20px;
     background: #eef0fa;
     color: #454e83;
     font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
 }
+
+/* Thông tin đơn hàng */
 
 .order-card-body {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px;
     padding: 22px;
 }
@@ -78,30 +160,71 @@
     display: flex;
     flex-direction: column;
     gap: 7px;
+    min-width: 0;
 }
+
+    .order-info-item span {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .order-info-item strong {
+        font-size: 14px;
+        overflow-wrap: anywhere;
+    }
 
 .order-total {
     color: #454e83;
     font-size: 17px;
 }
 
+/* ==============================
+   NÚT THAO TÁC
+============================== */
+
 .order-card-footer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
     padding: 15px 22px;
     border-top: 1px solid #e5e7eb;
 }
 
-.order-detail-btn {
+/* Form thao tác */
+
+.history-action-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+/* Thiết lập chung */
+
+.order-detail-btn,
+.cancel-order-btn,
+.confirm-received-btn,
+.review-order-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    min-height: 40px;
     padding: 10px 16px;
+    border: 1px solid transparent;
     border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Xem chi tiết */
+
+.order-detail-btn {
     background: #454e83;
     color: #fff;
-    text-decoration: none;
-    font-weight: 600;
 }
 
     .order-detail-btn:hover {
@@ -109,10 +232,50 @@
         color: #fff;
     }
 
+/* Hủy đơn hàng */
+
+.cancel-order-btn {
+    background: #dc3545;
+    color: #fff;
+}
+
+    .cancel-order-btn:hover {
+        background: #b02a37;
+    }
+
+/* Xác nhận nhận hàng */
+
+.confirm-received-btn {
+    background: #198754;
+    color: #fff;
+}
+
+    .confirm-received-btn:hover {
+        background: #146c43;
+    }
+
+/* Đánh giá sách */
+
+.review-order-btn {
+    border-color: #454e83;
+    background: #fff;
+    color: #454e83;
+}
+
+    .review-order-btn:hover {
+        background: #eef0fa;
+        color: #363e6d;
+    }
+
+/* ==============================
+   KHÔNG CÓ ĐƠN HÀNG
+============================== */
+
 .empty-orders {
     padding: 70px 20px;
     text-align: center;
     background: #f8f9fc;
+    border: 1px solid #e5e7eb;
     border-radius: 12px;
 }
 
@@ -140,15 +303,59 @@
         color: #fff;
         text-decoration: none;
         font-weight: 600;
+        transition: background 0.2s ease;
     }
 
+        .empty-orders a:hover {
+            background: #363e6d;
+            color: #fff;
+        }
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media (max-width: 768px) {
+    .order-history-page {
+        padding: 30px 15px 45px;
+    }
+
+    .order-status-tabs {
+        gap: 8px;
+    }
+
+    .order-status-tab {
+        padding: 9px 12px;
+        font-size: 13px;
+    }
+}
+
 @media (max-width: 576px) {
+    .order-history-header h1 {
+        font-size: 24px;
+    }
+
     .order-card-body {
         grid-template-columns: 1fr;
+        gap: 18px;
     }
 
     .order-card-header {
         align-items: flex-start;
         gap: 12px;
     }
+
+    .order-card-footer {
+        justify-content: stretch;
+    }
+
+        .order-card-footer > a,
+        .order-card-footer > form {
+            flex: 1 1 100%;
+        }
+
+        .order-card-footer > a,
+        .order-card-footer button {
+            width: 100%;
+        }
 }

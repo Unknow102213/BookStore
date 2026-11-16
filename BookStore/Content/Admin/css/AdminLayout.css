@@ -180,7 +180,50 @@ body {
     font-size: 13px;
     white-space: nowrap;
 }
+.admin-user-menu {
+    position: relative;
+}
 
+    .admin-user-menu summary {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        list-style: none;
+        color: #454e83;
+    }
+
+        .admin-user-menu summary::marker {
+            content: "";
+        }
+
+.admin-user-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 170px;
+    background: white;
+    border: 1px solid #e2e5ef;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 6px;
+    z-index: 1000;
+}
+
+    .admin-user-dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        color: #454e83;
+        text-decoration: none;
+        border-radius: 6px;
+    }
+
+        .admin-user-dropdown a:hover {
+            background-color: #f0f2fa;
+            color: #343c6b;
+        }
 /* Nội dung trang */
 .admin-content {
     flex: 1 1 auto;

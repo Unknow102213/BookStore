@@ -8,17 +8,12 @@
 
     switch (Model.Status)
     {
-        case "Chờ xử lý":
+        case "Chờ xác nhận":
             nextStatuses.Add(new SelectListItem
             {
                 Text = "Đang chuẩn bị",
                 Value = "Đang chuẩn bị"
-            });
-            nextStatuses.Add(new SelectListItem
-            {
-                Text = "Đã hủy",
-                Value = "Đã hủy"
-            });
+            });            
             break;
 
         case "Đang chuẩn bị":
@@ -26,12 +21,7 @@
             {
                 Text = "Đang giao hàng",
                 Value = "Đang giao hàng"
-            });
-            nextStatuses.Add(new SelectListItem
-            {
-                Text = "Đã hủy",
-                Value = "Đã hủy"
-            });
+            });            
             break;
 
         case "Đang giao hàng":
@@ -40,15 +30,7 @@
                 Text = "Đã nhận hàng",
                 Value = "Đã nhận hàng"
             });
-            break;
-
-        case "Đang yêu cầu trả hàng":
-            nextStatuses.Add(new SelectListItem
-            {
-                Text = "Đã trả hàng",
-                Value = "Đã trả hàng"
-            });
-            break;
+            break;        
     }
 }
 

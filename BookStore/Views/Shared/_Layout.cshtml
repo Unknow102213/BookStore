@@ -33,12 +33,15 @@
             </a>
 
             <form class="header-search"
-                  action="@Url.Action("Index", "Home")"
+                  action="@Url.Action("BookIndex", "Book")"
                   method="get">
+
                 <input type="search"
-                       name="search"
+                       name="keyword"
+                       value="@(ViewBag.Keyword ?? "")"
                        placeholder="Tìm kiếm sách..."
                        aria-label="Tìm kiếm sách" />
+
                 <button type="submit" aria-label="Tìm kiếm">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
@@ -67,16 +70,7 @@
                             <a href="@Url.Action("MyProfile", "Account")">
                                 <i class="fa-solid fa-user-pen"></i>
                                 Thông tin cá nhân
-                            </a>
-
-                            if (Session["UserRole"] != null &&
-                                Session["UserRole"].ToString() == "A")
-                            {
-                                <a href="@Url.Action("Index", "Books", new { area = "Admin" })">
-                                    <i class="fa-solid fa-gear"></i>
-                                    Quản trị
-                                </a>
-                            }
+                            </a>                            
 
                             <a href="@Url.Action("Logout", "Account")">
                                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -113,10 +107,11 @@
         <div class="menu-inner">
             <a href="@Url.Action("Index", "Home")"
                class="menu-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">
-                <i class="fa-solid fa-house"></i>&nbsp; Trang chủ
+                Trang chủ
             </a>
 
-            <a href="@Url.Action("BookIndex", "Book")" class="menu-link">
+            <a href="@Url.Action("BookIndex", "Book")" 
+               class="menu-link @(currentController == "Book" && currentAction == "BookIndex" ? "active" : "")">
                 Danh sách sách
             </a>
 
@@ -124,12 +119,16 @@
                 Sách nổi bật
             </a>
 
+            <a href="@Url.Action("Index", "Home")#recommended" class="menu-link">
+                Sách đề cử
+            </a>
+
             <a href="@Url.Action("Index", "Home")#bestsellers" class="menu-link">
                 Sách bán chạy
             </a>
 
-            <a href="@Url.Action("Index", "Home")#recommended" class="menu-link">
-                Đề cử
+            <a href="@Url.Action("Index", "Home")#newest" class="menu-link">
+                Sách mới cập nhập
             </a>
         </div>
     </nav>
@@ -143,42 +142,55 @@
             <div class="footer-col">
                 <h3>Trang web được tạo bởi</h3>
                 <ul class="footer-list">
-                    <li>Trần Tuấn Vũ - <span>25DH230101</span></li>
-                    <li>Phạm Lê Huy Hoàng - <span>25DH230046</span></li>
-                    <li>Trần Tú Uyên - <span>25DH230032</span></li>
+                    <li><span>25DH230101</span> - Trần Tuấn Vũ</li>
+                    <li><span>25DH230046</span> - Phạm Lê Huy Hoàng</li>
+                    <li><span>25DH230032</span> - Trần Tú Uyên</li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h3>Danh mục chính</h3>
+                <h3>Thông tin liên hệ</h3>
                 <ul class="footer-list">
-                    <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
-                    <li><a href="@Url.Action("Index", "Book")">Sách giáo khoa</a></li>
-                    <li><a href="@Url.Action("Index", "Book")">Sách ngoại ngữ</a></li>
-                    <li><a href="@Url.Action("Index", "Book")">Sách văn học</a></li>
+                    <li>
+                        <i class="fa-solid fa-phone"></i>
+                        Điện thoại: 098 109 2793
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        Email: trantuanvu213@gmail.com
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-clock"></i>
+                        Giờ làm việc: 8:00 - 21:00
+                    </li>
                 </ul>
             </div>
-
             <div class="footer-col">
-                <h3>Hỗ trợ khách hàng</h3>
+                <h3>THỂ LOẠI SÁCH CÓ THỂ BẠN SẼ THÍCH</h3>
                 <ul class="footer-list">
-                    <li><a href="#">Hướng dẫn mua hàng</a></li>
-                    <li><a href="#">Chính sách đổi trả</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Phương thức thanh toán</a></li>
+                    <li>
+                        @Html.ActionLink( "Văn học Việt Nam", "BookIndex", "Book", new { categoryId = 16 }, null )
+                    </li>
+
+                    <li>
+                        @Html.ActionLink( "Sách giáo khoa - Tham khảo", "BookIndex", "Book", new { categoryId = 5 }, null )
+                    </li>
+
+                    <li>
+                        @Html.ActionLink( "Sách tâm lý - Kỹ năng sống", "BookIndex", "Book", new { categoryId = 3 }, null )
+                    </li>
                 </ul>
             </div>
-
             <div class="footer-col footer-logo">
                 <img src="@Url.Content("~/Content/Layout/img/Logo.jpg")"
                      alt="Logo The Book Store" />
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <p>Cảm ơn bạn đã ghé thăm The Book Store!</p>
-        </div>
-    </footer>
+            <div class="footer-bottom">
+                <p>Cảm ơn bạn đã ghé thăm The Book Store!</p>
+            </div>
+</footer>
 
     @RenderSection("Scripts", required: false)
 

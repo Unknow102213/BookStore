@@ -42,7 +42,7 @@
 
             <div class="order-info-item">
                 <span>Trạng thái</span>
-                <strong class="order-status">@Model.Status</strong>
+                <strong class="order-details-status">@Model.Status</strong>
             </div>
 
             <div class="order-info-item">
@@ -130,70 +130,7 @@
         <div class="order-total">
             <span>Tổng thanh toán</span>
             <strong>@Model.TotalAmount.ToString("N0") đ</strong>
-        </div>
-        @{
-            var canCancel = new[]
-            {
-            "Chờ xác nhận",
-            "Đã xác nhận",
-            "Đang đóng gói"
-            }.Contains(Model.Status);
-        }
-
-        @if (canCancel)
-        {
-            using (Html.BeginForm(
-                "CancelOrder",
-                "Order",
-                new { id = Model.OrderID },
-                FormMethod.Post,
-                new { @class = "cancel-order-form" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <button type="submit" class="cancel-order-btn">
-                    <i class="fa-solid fa-xmark"></i>
-                    Hủy đơn hàng
-                </button>
-            }
-        }
-        @if (Model.Status == "Đang giao hàng" && Model.CompletedAt == null)
-        {
-            using (Html.BeginForm(
-            "ConfirmReceived",
-            "Order",
-            new { id = Model.OrderID },
-            FormMethod.Post,
-            new { id = "confirm-received-form", @class = "confirm-received-form" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <button type="submit" class="confirm-received-btn">
-                    <i class="fa-solid fa-check"></i>
-                    Xác nhận đã nhận hàng
-                </button>
-            }
-        }
+        </div>        
     </section>
 
 </div>
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById("confirm-received-form");
-
-            if (form) {
-                form.addEventListener("submit", function (event) {
-                    const confirmed = confirm(
-                        "Bạn có chắc chắn đã nhận được đơn hàng này không?\n\n" +
-                        "Sau khi xác nhận, thời hạn yêu cầu hoàn trả sẽ bắt đầu tính trong 7 ngày."
-                    );
-
-                    if (!confirmed) {
-                        event.preventDefault();
-                    }
-                });
-            }
-        });
-    </script>
-}

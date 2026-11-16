@@ -24,6 +24,7 @@
         <AssociationConnector Association="BookStoreModel.FK_OrderDetail_Orders" ManuallyRouted="false" />
         <AssociationConnector Association="BookStoreModel.FK_Orders_Users" ManuallyRouted="false" />
         <AssociationConnector Association="BookStoreModel.FK_Review_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="BookStoreModel.FK_Review_Orders" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

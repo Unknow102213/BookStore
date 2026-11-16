@@ -4,6 +4,8 @@
 @{
     ViewBag.Title = "Quản lý tài khoản";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    string currentRole = ViewBag.CurrentRole as string;
 }
 
 @section Styles {
@@ -11,18 +13,95 @@
           href="@Url.Content("~/Content/Admin/css/UsersIndex.css")" />
 }
 
-<div class="users-page">
+<div class="users-page">    
+    <!-- Tiêu đề -->
     <div class="page-heading">
         <div>
             <h2>Quản lý tài khoản</h2>
-            <p>Danh sách tài khoản trong hệ thống.</p>
-        </div>
-        <div class="index-summary">
-            Tổng số tài khoản: <strong>@ViewBag.UserCount</strong>
+            <p>Quản lý tài khoản khách hàng và quản trị viên.</p>
         </div>
     </div>
 
+    <!-- Thống kê -->
+    <div class="users-statistics">
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+                <p>Tổng tài khoản</p>
+                <h3>@ViewBag.UserCount</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+                <p>Khách hàng</p>
+                <h3>@ViewBag.CustomerCount</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+                <p>Quản trị viên</p>
+                <h3>@ViewBag.AdminCount</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Tab phân loại tài khoản -->
+    <div class="users-tabs">
+
+        <a href="@Url.Action("Index", "Users", new { area = "Admin" })"
+           class="users-tab @(currentRole == null ? "active" : "")">
+            <i class="fa-solid fa-list"></i>
+            Tất cả
+        </a>
+
+        <a href="@Url.Action("Index", "Users", new { area = "Admin", role = "C" })"
+           class="users-tab @(currentRole == "C" ? "active" : "")">
+            <i class="fa-solid fa-users"></i>
+            Khách hàng
+            <span>@ViewBag.CustomerCount</span>
+        </a>
+
+        <a href="@Url.Action("Index", "Users", new { area = "Admin", role = "A" })"
+           class="users-tab @(currentRole == "A" ? "active" : "")">
+            <i class="fa-solid fa-user-shield"></i>
+            Quản trị viên
+            <span>@ViewBag.AdminCount</span>
+        </a>
+
+    </div>
+
+    <!-- Danh sách tài khoản -->
     <div class="table-container">
+
+        <div class="table-heading">
+            <h3>
+                @if (currentRole == "C")
+                {
+                    @:Danh sách khách hàng
+                }
+                else if (currentRole == "A")
+                {
+                    @:Danh sách quản trị viên
+                }
+                else
+                {
+                    @:Danh sách tất cả tài khoản
+                }
+            </h3>
+        </div>
+
         <table class="admin-table">
             <thead>
                 <tr>
@@ -35,6 +114,7 @@
                     <th>Thao tác</th>
                 </tr>
             </thead>
+
             <tbody>
                 @if (Model != null && Model.Any())
                 {
@@ -42,27 +122,63 @@
                     {
                         <tr>
                             <td>@user.UserID</td>
-                            <td>@user.FullName</td>
+
+                            <td>
+                                @(string.IsNullOrEmpty(user.FullName)
+                                    ? "Chưa cập nhật"
+                                    : user.FullName)
+                            </td>
+
                             <td>@user.Email</td>
-                            <td>@(string.IsNullOrEmpty(user.Phone) ? "Chưa cập nhật" : user.Phone)</td>
+
                             <td>
-                                @(user.Role == "A" ? "Admin" : "Khách hàng")
+                                @(string.IsNullOrEmpty(user.Phone)
+                                    ? "Chưa cập nhật"
+                                    : user.Phone)
                             </td>
+
                             <td>
-                                @(user.IsActive ? "Đang hoạt động" : "Đã khóa")
+                                @if (user.Role == "A")
+                                {
+                                    <span class="role-admin">Admin</span>
+                                }
+                                else
+                                {
+                                    <span class="role-customer">Khách hàng</span>
+                                }
                             </td>
+
                             <td>
-                                @Html.ActionLink(
-                                    "Chi tiết",
-                                    "Details",
-                                    new { id = user.UserID }
-                                )
-                                |
-                                @Html.ActionLink(
-                                    "Sửa",
-                                    "Edit",
-                                    new { id = user.UserID }
-                                )
+                                @if (user.IsActive)
+                                {
+                                    <span class="status-active">
+                                        Đang hoạt động
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-locked">
+                                        Đã khóa
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="action-links">
+
+                                @if (ViewBag.IsMainAdmin == true && user.UserID != 1)
+                                {
+                                    <a href="@Url.Action("Edit", new { id = user.UserID })"
+                                       class="action-btn edit-btn" title="Sửa">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                }
+
+                                <a href="@Url.Action("Details", new { id = user.UserID })"
+                                   class="action-btn detail-btn"
+                                   title="Chi tiết">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+
                             </td>
                         </tr>
                     }
@@ -70,12 +186,14 @@
                 else
                 {
                     <tr>
-                        <td colspan="7" style="text-align:center;">
-                            Chưa có tài khoản nào.
+                        <td colspan="7" class="empty-message">
+                            Không có tài khoản nào trong danh sách.
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+
     </div>
+
 </div>

@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using BookStore.Models;
+using BookStore.ViewModels;
 
 namespace BookStore.Controllers
 {
@@ -168,9 +169,98 @@ namespace BookStore.Controllers
             }
 
             TempData["CartSuccess"] = "Đã thêm sách vào giỏ hàng.";
-            return RedirectToAction("CartIndex");
+            return RedirectToAction("BookIndex", "Book");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddBookDetailsToCart(BookDetailsViewModel model)
+        {
+            // Kiểm tra đăng nhập
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Account");
+
+            // Lấy thông tin sách
+            var book = db.Books
+                .Include(b => b.Category)
+                .FirstOrDefault(b => b.BookID == model.BookID);
+
+            if (book == null)
+                return HttpNotFound();
+
+            // Gắn thông tin sách vào ViewModel
+            model.Book = book;
+
+            string error = null;
+
+            // Kiểm tra trạng thái sách và số lượng
+            if (!book.IsActive)
+                error = "Sách hiện không được kinh doanh.";
+            else if (book.StockQuantity <= 0)
+                error = "Sách hiện đã hết hàng.";
+            else if (model.Quantity <= 0)
+                error = "Số lượng phải lớn hơn 0.";
+            else if (model.Quantity > book.StockQuantity)
+                error = "Số lượng vượt quá số sách còn trong kho.";
+
+            if (error != null)
+            {
+                model.ErrorMessage = error;
+                return View("~/Views/Book/BookDetails.cshtml", model);
+            }
+
+            int userID = (int)Session["UserID"];
+
+            // Tìm giỏ hàng của người dùng
+            Cart cart = db.Carts.FirstOrDefault(c => c.UserID == userID);
+
+            if (cart == null)
+            {
+                cart = new Cart
+                {
+                    UserID = userID,
+                    CreatedAt = DateTime.Now
+                };
+
+                db.Carts.Add(cart);
+                db.SaveChanges();
+            }
+
+            // Kiểm tra sách đã có trong giỏ hàng chưa
+            CartItem item = db.CartItems.FirstOrDefault(
+                ci => ci.CartID == cart.CartID && ci.BookID == model.BookID
+            );
+
+            if (item != null)
+            {
+                int newQuantity = item.Quantity + model.Quantity;
+
+                if (newQuantity > book.StockQuantity)
+                {
+                    model.ErrorMessage =
+                        "Tổng số lượng sách trong giỏ vượt quá tồn kho.";
+
+                    return View("~/Views/Book/BookDetails.cshtml", model);
+                }
+
+                item.Quantity = newQuantity;
+            }
+            else
+            {
+                db.CartItems.Add(new CartItem
+                {
+                    CartID = cart.CartID,
+                    BookID = model.BookID,
+                    Quantity = model.Quantity
+                });
+            }
+
+            // Lưu thay đổi
+            db.SaveChanges();
+
+            // Thêm thành công, quay về danh sách sách
+            return RedirectToAction("BookIndex", "Book");
+        }
 
         // POST: Cart/UpdateQuantity
         [HttpPost]

@@ -104,8 +104,7 @@
     border-top: 1px solid #eef0f5;
 }
 
-.btn-user-back,
-.btn-user-edit {
+.btn-user-back{
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -120,21 +119,11 @@
 }
 
 .btn-user-back {
-    background: #ffffff;
-    color: #555d70;
-    border-color: #dfe3ec;
-}
-
-    .btn-user-back:hover {
-        background: #f5f6fb;
-    }
-
-.btn-user-edit {
     background: #454e83;
     color: #ffffff;
 }
 
-    .btn-user-edit:hover {
+    .btn-user-back:hover {
         background: #343e76;
         color: #ffffff;
     }

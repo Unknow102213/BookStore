@@ -1,0 +1,136 @@
+﻿
+@model BookStore.ViewModels.ReviewOrderViewModel
+
+@{
+    ViewBag.Title = "Đánh giá đơn hàng";
+    Layout = "~/Views/Shared/_CustomerAccountLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/Customer/css/ReviewOrder.css")" />
+}
+
+<main class="review-page">
+    <div class="review-container">
+
+        <div class="review-header">
+            <h1>@(Model.IsReviewed ? "Chỉnh sửa đánh giá" : "Đánh giá đơn hàng")</h1>
+            <p>Đơn hàng #@Model.OrderID</p>
+        </div>
+
+        @using (Html.BeginForm(
+            "SubmitReview",
+            "Order",
+            FormMethod.Post,
+            new { @class = "review-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.OrderID)
+
+            <section class="review-books">
+                <h2>Sách trong đơn hàng</h2>
+
+                @foreach (var book in Model.Books)
+                {
+                    <div class="review-book">
+                        @if (!string.IsNullOrEmpty(book.ImageURL))
+                        {
+                            <img src="@Url.Content(book.ImageURL)"
+                                 alt="@book.Title" />
+                        }
+                        else
+                        {
+                            <div class="review-book-no-image">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                        }
+
+                        <div class="review-book-info">
+                            <strong>@book.Title</strong>
+                        </div>
+                    </div>
+                }
+            </section>
+
+            <section class="review-content">
+                <h2>Mức độ hài lòng</h2>
+
+                <div class="rating-stars">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <input type="radio"
+                               id="star-@i"
+                               name="Rating"
+                               value="@i"
+                               @(Model.Rating == i ? "checked" : "") />
+
+                        <label for="star-@i"
+                               title="@i sao">
+                            <i class="fa-solid fa-star"></i>
+                        </label>
+                    }
+                </div>
+
+                @Html.ValidationMessageFor(
+                         m => m.Rating,
+                         "",
+                         new { @class = "review-error" })
+
+                <h2>Nội dung đánh giá</h2>
+
+                @Html.TextAreaFor(
+                         m => m.Comment,
+                         new
+                         {
+                             @class = "review-textarea",
+                             placeholder = "Chia sẻ cảm nhận của bạn về những cuốn sách...",
+                             rows = 6,
+                             maxlength = 1000
+                         })
+
+                @Html.ValidationMessageFor(
+                         m => m.Comment,
+                         "",
+                         new { @class = "review-error" })
+
+                <div class="review-char-count">
+                    Tối đa 1000 ký tự
+                </div>
+            </section>
+
+            <div class="review-actions">
+                <a href="@Url.Action(
+                    "OrderHistory",
+                    "Order",
+                    new { status = "Đã nhận hàng" })"
+                   class="review-back-btn">
+                    Quay lại
+                </a>
+
+                <button type="submit" class="review-submit-btn">
+                    <i class="fa-solid fa-star"></i>
+                    @(Model.IsReviewed ? "Cập nhật đánh giá" : "Gửi đánh giá")
+                </button>
+            </div>
+        }
+
+    </div>
+</main>
+
+@section Scripts {
+    <script>document.addEventListener("DOMContentLoaded", function () {
+            const textarea = document.querySelector(".review-textarea");
+            const counter = document.querySelector(".review-char-count");
+
+            if (textarea && counter) {
+                textarea.addEventListener("input", function () {
+                    counter.textContent =
+                        textarea.value.length + "/1000 ký tự";
+                });
+
+                counter.textContent =
+                    textarea.value.length + "/1000 ký tự";
+            }
+        });</script>
+}

@@ -66,10 +66,22 @@
                     <span>Hệ thống quản trị</span>
                 </div>
 
-                <div class="admin-header-right">
-                    <i class="fa-solid fa-user-shield"></i>
-                    <span>Quản trị viên</span>
-                </div>
+                <details class="admin-user-menu">
+                    <summary>
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>
+                            @(Session["FullName"] ?? Session["UserEmail"] ?? "Quản trị viên")
+                        </span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </summary>
+
+                    <div class="admin-user-dropdown">
+                        <a href="@Url.Action("Logout", "Account", new { area = "" })">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Đăng xuất
+                        </a>
+                    </div>
+                </details>
             </header>
 
             <main class="admin-content">

@@ -1,156 +1,334 @@
-﻿/* ==============================
+﻿
+/* ==============================
    TRANG QUẢN LÝ TÀI KHOẢN
 ============================== */
 
-/* Tiêu đề trang */
-.users-page .page-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 24px;
+.users-page {
+    width: 100%;
+    color: #1f2937;
 }
 
-    .users-page .page-heading h2 {
-        margin: 0 0 8px;
-        color: #252b42;
+    /* ==============================
+             TIÊU ĐỀ TRANG
+    ============================== */
+
+    .users-page .page-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+        .users-page .page-heading h2 {
+            margin: 0 0 8px;
+            color: #252b42;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .users-page .page-heading p {
+            margin: 0;
+            color: #858b9a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+    /* ==============================
+            THỐNG KÊ TÀI KHOẢN
+    ============================== */
+
+    .users-page .users-statistics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .users-page .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 18px 20px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(31, 41, 55, 0.04);
+    }
+
+    .users-page .stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #DCE1F4;
+        color: #454e83;
+        font-size: 21px;
+    }
+
+    .users-page .stat-card p {
+        margin: 0 0 5px;
+        color: #858b9a;
+        font-size: 13px;
+    }
+
+    .users-page .stat-card h3 {
+        margin: 0;
+        color: #454e83;
         font-size: 24px;
         font-weight: 700;
     }
 
-    .users-page .page-heading p {
-        margin: 0;
-        color: #858b9a;
-        font-size: 14px;
-        line-height: 1.6;
-    }
+    /* ==============================
+        TAB PHÂN LOẠI TÀI KHOẢN
+    ============================== */
 
-.index-summary {
-    margin: 15px 0 20px;
-    padding: 12px 16px;
-    background-color: #DCE1F4;
-    border-radius: 8px;
-    color: #454e83;
-    font-size: 15px;
-}
-
-    .index-summary strong {
-        font-size: 18px;
-        margin-left: 5px;
-    }
-/* Khung chứa bảng */
-.users-page .table-container {
-    width: 100%;
-    overflow-x: auto;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(31, 41, 55, 0.04);
-}
-
-/* Bảng tài khoản */
-.users-page .admin-table {
-    width: 100%;
-    min-width: 850px;
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 14px;
-}
-
-    /* Tiêu đề cột */
-    .users-page .admin-table thead {
-        background: #f5f6fb;
-    }
-
-    .users-page .admin-table th {
-        padding: 16px;
-        color: #555d70;
-        font-size: 13px;
-        font-weight: 700;
-        white-space: nowrap;
+    .users-page .users-tabs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
         border-bottom: 1px solid #e5e7eb;
     }
 
-    /* Nội dung từng ô */
-    .users-page .admin-table td {
-        padding: 16px;
-        color: #4b5563;
-        vertical-align: middle;
-        border-bottom: 1px solid #eef0f5;
-    }
-
-    /* Bỏ đường viền ở hàng cuối */
-    .users-page .admin-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Hiệu ứng di chuột */
-    .users-page .admin-table tbody tr:hover {
-        background: #fafbff;
-    }
-
-    /* Mã tài khoản */
-    .users-page .admin-table td:first-child {
-        color: #454e83;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    /* Email */
-    .users-page .admin-table td:nth-child(3) {
-        overflow-wrap: anywhere;
-    }
-
-    /* Trạng thái khi chưa có tài khoản */
-    .users-page .admin-table td[colspan] {
-        padding: 36px 16px;
-        color: #858b9a;
-        text-align: center;
-    }
-
-    /* Các liên kết thao tác */
-    .users-page .admin-table td a {
-        display: inline-block;
-        color: #454e83;
+    .users-page .users-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        color: #6b7280;
+        font-size: 14px;
         font-weight: 600;
         text-decoration: none;
+        transition: 0.2s;
+    }
+
+        .users-page .users-tab:hover {
+            background: #f5f6fb;
+            color: #454e83;
+            text-decoration: none;
+        }
+
+        .users-page .users-tab.active {
+            background: #DCE1F4;
+            color: #454e83;
+        }
+
+        .users-page .users-tab span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 6px;
+            border-radius: 20px;
+            background: #eef0fb;
+            color: #454e83;
+            font-size: 11px;
+        }
+
+    /* ==============================
+            KHUNG CHỨA BẢNG
+    ============================== */
+
+    .users-page .table-container {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(31, 41, 55, 0.04);
+    }
+
+    /* Tiêu đề bảng */
+
+    .users-page .table-heading {
+        padding: 16px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .users-page .table-heading h3 {
+            margin: 0;
+            color: #252b42;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+    /* ==============================
+            BẢNG TÀI KHOẢN
+    ============================== */
+
+    .users-page .admin-table {
+        width: 100%;
+        min-width: 1000px;
+        border-collapse: collapse;
+        border-spacing: 0;
+        text-align: left;
+        font-size: 14px;
+    }
+
+        .users-page .admin-table thead {
+            background: #f5f6fb;
+        }
+
+        .users-page .admin-table th {
+            padding: 16px;
+            background: #f5f6fb;
+            color: #555d70;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .users-page .admin-table td {
+            padding: 16px;
+            color: #4b5563;
+            vertical-align: middle;
+            border-bottom: 1px solid #eef0f5;
+        }
+
+        /* Bỏ đường viền ở hàng cuối */
+
+        .users-page .admin-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Hiệu ứng di chuột */
+
+        .users-page .admin-table tbody tr:hover {
+            background: #fafbff;
+        }
+
+        /* Mã tài khoản */
+
+        .users-page .admin-table td:first-child {
+            color: #454e83;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Email */
+
+        .users-page .admin-table td:nth-child(3) {
+            overflow-wrap: anywhere;
+        }
+
+    /* ==============================
+            VAI TRÒ TÀI KHOẢN
+    ============================== */
+
+    .users-page .role-admin,
+    .users-page .role-customer {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
         white-space: nowrap;
     }
 
-        .users-page .admin-table td a:hover {
-            color: #6976b8;
-            text-decoration: underline;
-        }
+    .users-page .role-admin {
+        background: #ede9fe;
+        color: #6d28d9;
+    }
 
-/* Trạng thái tài khoản */
-.users-page .user-status {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-}
+    .users-page .role-customer {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
 
-    .users-page .user-status.active {
+    /* ==============================
+        TRẠNG THÁI TÀI KHOẢN
+    ============================== */
+
+    .users-page .status-active,
+    .users-page .status-locked {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .users-page .status-active {
         background: #e7f6ec;
         color: #267442;
     }
 
-    .users-page .user-status.locked {
+    .users-page .status-locked {
         background: #fdecec;
         color: #b42318;
     }
 
-/* Vai trò */
-.users-page .user-role {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 20px;
-    background: #eef0fb;
-    color: #454e83;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-}
+    /* ==============================
+                THAO TÁC
+============================== */
 
+    .users-page .action-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        white-space: nowrap;
+    }
+
+    /* Kiểu dáng chung */
+    .users-page .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        border-radius: 9px;
+        font-size: 17px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+        .users-page .action-btn:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+    /* Nút sửa */
+    .users-page .edit-btn {
+        background: #fff2c2;
+        color: #a34b00;
+    }
+
+        .users-page .edit-btn:hover {
+            background: #ffe69a;
+            color: #a34b00;
+        }
+
+    /* Nút chi tiết */
+    .users-page .detail-btn {
+        background: #dceaff;
+        color: #2563eb;
+    }
+
+        .users-page .detail-btn:hover {
+            background: #c5dcff;
+            color: #2563eb;
+        }
+
+    /* ==============================
+            DANH SÁCH TRỐNG
+    ============================== */
+
+    .users-page .empty-message {
+        padding: 36px 16px !important;
+        color: #858b9a !important;
+        text-align: center;
+    }

@@ -20,8 +20,10 @@ namespace BookStore.Models
         public int Rating { get; set; }
         public string Comment { get; set; }
         public System.DateTime CreatedAt { get; set; }
+        public int OrderID { get; set; }
     
         public virtual Book Book { get; set; }
         public virtual User User { get; set; }
+        public virtual Order Order { get; set; }
     }
 }

@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using BookStore.Models;
 using System.Data.Entity;
-using System.Linq;
+using BookStore.ViewModels;
 
 namespace BookStore.Controllers
 {
@@ -26,9 +25,12 @@ namespace BookStore.Controllers
                 .Where(b => b.IsActive);
 
             // Tim kiem theo ten sach
+            // Tim kiem theo ten sach va tac gia
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                books = books.Where(b => b.Title.Contains(keyword));
+                keyword = keyword.Trim();
+
+                books = books.Where(b => b.Title.Contains(keyword) || (b.AuthorName != null && b.AuthorName.Contains(keyword)));
             }
 
             // Loc theo the loai
@@ -95,23 +97,53 @@ namespace BookStore.Controllers
 
 
         // Trang chi tiet sach
+        // Trang chi tiet sach
         public ActionResult BookDetails(int? id)
         {
             if (id == null)
-            {
                 return HttpNotFound();
-            }
 
             var book = db.Books
                 .Include(b => b.Category)
                 .FirstOrDefault(b => b.BookID == id.Value);
 
             if (book == null)
-            {
                 return HttpNotFound();
-            }
 
-            return View(book);
+            // Lay danh sach danh gia cua sach
+            var reviews = db.Reviews
+                .Where(r => r.BookID == book.BookID)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToList();
+
+            // Tinh diem danh gia trung binh
+            double averageRating = reviews.Any()
+                ? reviews.Average(r => (double)r.Rating)
+                : 0;
+
+            var reviewInfo = new BookReviewViewModel
+            {
+                TotalReviews = reviews.Count,
+                AverageRating = Math.Round(averageRating, 1),
+
+                Reviews = reviews.Select(r => new BookReviewItemViewModel
+                {
+                    Rating = r.Rating,
+                    Comment = r.Comment,
+                    CreatedAt = r.CreatedAt,
+                    FullName = r.User.FullName
+                }).ToList()
+            };
+
+            var model = new BookDetailsViewModel
+            {
+                Book = book,
+                BookID = book.BookID,
+                Quantity = 1,
+                ReviewInfo = reviewInfo
+            };
+
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)

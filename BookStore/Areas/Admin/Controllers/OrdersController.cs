@@ -81,7 +81,7 @@ namespace BookStore.Areas.Admin.Controllers
                 // Kiểm tra trạng thái được phép chuyển
                 bool isValidTransition = false;
 
-                if (currentStatus == "Chờ xử lý" &&
+                if (currentStatus == "Chờ xác nhận" &&
                     (newStatus == "Đang chuẩn bị" || newStatus == "Đã hủy"))
                 {
                     isValidTransition = true;
@@ -95,12 +95,7 @@ namespace BookStore.Areas.Admin.Controllers
                     newStatus == "Đã nhận hàng")
                 {
                     isValidTransition = true;
-                }
-                else if (currentStatus == "Đang yêu cầu trả hàng" &&
-                    newStatus == "Đã trả hàng")
-                {
-                    isValidTransition = true;
-                }
+                }                
 
                 if (!isValidTransition)
                 {
@@ -122,13 +117,7 @@ namespace BookStore.Areas.Admin.Controllers
                     order.PaymentStatus == "Chưa thanh toán")
                 {
                     order.PaymentStatus = "Đã thanh toán";
-                }
-
-                if (newStatus == "Đã trả hàng" &&
-                    order.PaymentStatus == "Đã thanh toán")
-                {
-                    order.PaymentStatus = "Đã hoàn tiền";
-                }
+                }                
 
                 db.SaveChanges();
 
@@ -140,7 +129,6 @@ namespace BookStore.Areas.Admin.Controllers
 
             return View(formOrder);
         }
-
 
         protected override void Dispose(bool disposing)
         {

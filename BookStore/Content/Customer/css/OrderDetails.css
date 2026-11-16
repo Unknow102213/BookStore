@@ -1,13 +1,22 @@
 ﻿
+/* ==============================
+   TRANG CHI TIẾT ĐƠN HÀNG
+============================== */
+
 .order-details-page {
     width: 100%;
     color: #1f2937;
 }
 
+/* ==============================
+   TIÊU ĐỀ
+============================== */
+
 .order-details-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
     margin-bottom: 24px;
 }
 
@@ -22,22 +31,33 @@
         color: #6b7280;
     }
 
+/* Nút quay lại */
+
 .back-order-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 10px 16px;
     border: 1px solid #454e83;
     border-radius: 8px;
+    background: #fff;
     color: #454e83;
     text-decoration: none;
+    font-size: 14px;
     font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s ease;
 }
 
     .back-order-btn:hover {
         background: #454e83;
         color: #fff;
     }
+
+/* ==============================
+   KHỐI THÔNG TIN
+============================== */
 
 .order-info-section {
     padding: 24px;
@@ -55,35 +75,48 @@
         font-size: 18px;
     }
 
+/* Lưới thông tin */
+
 .order-info-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
 }
 
-.order-info-item {
+.order-details-page .order-info-item {
     display: flex;
     flex-direction: column;
     gap: 7px;
     min-width: 0;
 }
 
-    .order-info-item span {
+    .order-details-page .order-info-item span {
         color: #6b7280;
         font-size: 13px;
     }
 
-    .order-info-item strong {
+    .order-details-page .order-info-item strong {
         font-size: 14px;
         overflow-wrap: anywhere;
     }
 
-    .order-info-item.full-width {
+    .order-details-page .order-info-item.full-width {
         grid-column: 1 / -1;
     }
 
-.order-status {
+/* Trạng thái đơn hàng */
+
+.order-details-status {
     color: #454e83;
+}
+
+/* ==============================
+   SẢN PHẨM ĐÃ ĐẶT
+============================== */
+
+.order-product-list {
+    display: flex;
+    flex-direction: column;
 }
 
 .order-product-item {
@@ -93,6 +126,8 @@
     padding: 16px 0;
     border-bottom: 1px solid #e5e7eb;
 }
+
+/* Ảnh sản phẩm */
 
 .order-product-image {
     width: 75px;
@@ -104,6 +139,7 @@
 }
 
     .order-product-image img {
+        display: block;
         width: 100%;
         height: 100%;
         object-fit: contain;
@@ -119,14 +155,17 @@
     font-size: 26px;
 }
 
+/* Thông tin sản phẩm */
+
 .order-product-info {
     flex: 1;
+    min-width: 0;
 }
 
     .order-product-info h4 {
         margin: 0 0 10px;
-        font-size: 15px;
         color: #1f2937;
+        font-size: 15px;
     }
 
     .order-product-info p {
@@ -135,101 +174,67 @@
         font-size: 13px;
     }
 
+/* Thành tiền */
+
 .order-product-subtotal {
-    font-weight: 700;
     color: #454e83;
+    font-size: 14px;
+    font-weight: 700;
     white-space: nowrap;
 }
 
-.order-total {
+/* ==============================
+   TỔNG THANH TOÁN
+============================== */
+
+.order-details-page .order-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
     padding-top: 22px;
     margin-top: 8px;
 }
 
-    .order-total span {
+    .order-details-page .order-total span {
         font-weight: 600;
     }
 
-    .order-total strong {
+    .order-details-page .order-total strong {
         color: #454e83;
         font-size: 21px;
+        white-space: nowrap;
     }
 
-.cancel-order-form {
-    margin-top: 20px;
-    text-align: right;
-}
+/* ==============================
+   RESPONSIVE
+============================== */
 
-.cancel-order-btn {
-    padding: 11px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #dc3545;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-    .cancel-order-btn:hover {
-        background: #b02a37;
+@media (max-width: 768px) {
+    .order-details-header h2 {
+        font-size: 22px;
     }
 
-/* Nút xác nhận đã nhận hàng */
-.confirm-received-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 11px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #454e83;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-    .confirm-received-btn:hover {
-        background: #343c6b;
+    .order-info-section {
+        padding: 20px;
     }
 
-    .confirm-received-btn:active {
-        transform: scale(0.98);
+    .order-product-item {
+        gap: 14px;
     }
-
-    .confirm-received-btn i {
-        font-size: 14px;
-    }
-.confirm-received-form {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-.order-message {
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background: #eef0fa;
-    color: #454e83;
 }
 
 @media (max-width: 600px) {
     .order-details-header {
         align-items: flex-start;
-        gap: 12px;
+        flex-direction: column;
     }
 
     .order-info-grid {
         grid-template-columns: 1fr;
     }
 
-    .order-info-item.full-width {
+    .order-details-page .order-info-item.full-width {
         grid-column: auto;
     }
 
@@ -237,12 +242,21 @@
         flex-wrap: wrap;
     }
 
+    .order-product-info {
+        flex-basis: calc(100% - 95px);
+    }
+
     .order-product-subtotal {
         width: 100%;
         text-align: right;
     }
 
-    .order-total {
+    .order-details-page .order-total {
+        align-items: flex-start;
         gap: 12px;
     }
+
+        .order-details-page .order-total strong {
+            font-size: 19px;
+        }
 }

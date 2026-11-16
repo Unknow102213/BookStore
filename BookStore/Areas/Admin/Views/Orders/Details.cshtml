@@ -73,13 +73,6 @@
                         @Html.DisplayFor(model => model.CompletedAt)
                     </strong>
                 </div>
-
-                <div class="order-info-item">
-                    <span>Hạn đổi trả</span>
-                    <strong>
-                        @Html.DisplayFor(model => model.ReturnDeadline)
-                    </strong>
-                </div>
             </div>
         </div>
         <div class="order-details-section">
@@ -165,14 +158,14 @@
                 null,
                 new { @class = "btn-order-back" })
 
-            @if (Model.Status != "Đã giao hàng" || Model.Status != "Đã hủy")
+            @if (Model.Status != "Đã nhận hàng" && Model.Status != "Đã hủy")
             {
                 @Html.ActionLink(
                     "Cập nhật đơn hàng",
                     "Edit",
                     new { id = Model.OrderID },
                     new { @class = "btn-order-edit" })
-            }
+             }
         </div>
     </div>
 </div>

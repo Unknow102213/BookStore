@@ -1,23 +1,61 @@
-﻿@model IEnumerable<BookStore.Models.Order>
+﻿
+@model IEnumerable<BookStore.Models.Order>
 
 @{
     ViewBag.Title = "Lịch sử đơn hàng";
     Layout = "~/Views/Shared/_CustomerAccountLayout.cshtml";
+
+    string currentStatus = Request.QueryString["status"] ?? "Chờ xác nhận";
+
+    string[] statuses =
+    {
+        "Chờ xác nhận",
+        "Đang chuẩn bị",
+        "Đang giao hàng",
+        "Đã nhận hàng",
+        "Đã hủy"
+    };
+
+    if (!statuses.Contains(currentStatus))
+    {
+        currentStatus = "Chờ xác nhận";
+    }
 }
 
 @section Styles {
     <link rel="stylesheet"
           href="@Url.Content("~/Content/Customer/css/OrderHistory.css")" />
 }
-<main class="order-history-page">
 
+<main class="order-history-page">
     <div class="order-history-container">
 
+        <!-- Tiêu đề -->
         <div class="order-history-header">
             <h1>Lịch sử đơn hàng</h1>
-            <p>Theo dõi những đơn hàng bạn đã đặt tại The Book Store.</p>            
+            <p>Theo dõi những đơn hàng bạn đã đặt tại The Book Store.</p>
         </div>
 
+        <!-- Thông báo kết quả thao tác -->
+        @if (TempData["OrderMessage"] != null)
+        {
+            <div class="order-message">
+                @TempData["OrderMessage"]
+            </div>
+        }
+
+        <!-- Các tab trạng thái -->
+        <div class="order-status-tabs">
+            @foreach (var status in statuses)
+            {
+                <a href="@Url.Action("OrderHistory", "Order", new { status = status })"
+                   class="order-status-tab @(currentStatus == status ? "active" : "")">
+                    @status
+                </a>
+            }
+        </div>
+
+        <!-- Danh sách đơn hàng -->
         @if (Model != null && Model.Any())
         {
             <div class="order-list">
@@ -26,17 +64,19 @@
                 {
                     <div class="order-card">
 
+                        <!-- Thông tin mã đơn và trạng thái -->
                         <div class="order-card-header">
                             <div>
                                 <span class="order-label">Mã đơn hàng</span>
                                 <strong>#@order.OrderID</strong>
                             </div>
 
-                            <span class="order-status">
+                            <span class="order-history-status">
                                 @order.Status
                             </span>
                         </div>
 
+                        <!-- Thông tin đơn hàng -->
                         <div class="order-card-body">
 
                             <div class="order-info-item">
@@ -53,7 +93,11 @@
 
                             <div class="order-info-item">
                                 <span>Thanh toán</span>
-                                <strong>@order.PaymentMethod</strong>
+                                <strong>
+                                    @(order.PaymentMethod == "COD"
+                                        ? "Thanh toán khi nhận hàng"
+                                        : order.PaymentMethod)
+                                </strong>
                             </div>
 
                             <div class="order-info-item">
@@ -65,10 +109,61 @@
 
                         </div>
 
+                        <!-- Các nút thao tác -->
                         <div class="order-card-footer">
 
-                            <a href="@Url.Action("OrderDetails", "Order",
-                                new { id = order.OrderID })"
+                            <!-- Hủy đơn hàng -->
+                            @if (order.Status == "Chờ xác nhận" ||
+                                 order.Status == "Đang chuẩn bị")
+                            {
+                                using (Html.BeginForm(
+                                    "CancelOrder",
+                                    "Order",
+                                    new { id = order.OrderID },
+                                    FormMethod.Post,
+                                    new { @class = "history-action-form cancel-order-form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="cancel-order-btn">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        Hủy đơn hàng
+                                    </button>
+                                }
+                            }
+
+                            <!-- Xác nhận đã nhận hàng -->
+                            @if (order.Status == "Đang giao hàng" &&
+                                 order.CompletedAt == null)
+                            {
+                                using (Html.BeginForm(
+                                    "ConfirmReceived",
+                                    "Order",
+                                    new { id = order.OrderID },
+                                    FormMethod.Post,
+                                    new { @class = "history-action-form confirm-received-form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="confirm-received-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        Xác nhận đã nhận hàng
+                                    </button>
+                                }
+                            }
+
+                            <!-- Đánh giá sách -->
+                            @if (order.Status == "Đã nhận hàng")
+                            {
+                                <a href="@Url.Action("ReviewOrder", "Order", new { id = order.OrderID })"
+                                   class="review-order-btn">
+                                    <i class="fa-solid fa-star"></i>
+                                    Đánh giá sách
+                                </a>
+                            }
+
+                            <!-- Xem chi tiết -->
+                            <a href="@Url.Action("OrderDetails", "Order", new { id = order.OrderID })"
                                class="order-detail-btn">
                                 Xem chi tiết
                                 <i class="fa-solid fa-arrow-right"></i>
@@ -83,13 +178,17 @@
         }
         else
         {
+            <!-- Không có đơn hàng ở trạng thái hiện tại -->
             <div class="empty-orders">
 
                 <i class="fa-solid fa-box-open"></i>
 
-                <h2>Bạn chưa có đơn hàng nào</h2>
+                <h2>Không có đơn hàng</h2>
 
-                <p>Các đơn hàng bạn đặt sẽ được hiển thị tại đây.</p>
+                <p>
+                    Bạn chưa có đơn hàng nào ở trạng thái
+                    "@currentStatus".
+                </p>
 
                 <a href="@Url.Action("Index", "Home")">
                     Khám phá sách
@@ -99,5 +198,46 @@
         }
 
     </div>
-
 </main>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Xác nhận trước khi hủy đơn hàng
+            document.querySelectorAll(".cancel-order-form")
+                .forEach(function (form) {
+
+                    form.addEventListener("submit", function (event) {
+
+                        const confirmed = confirm(
+                            "Bạn có chắc chắn muốn hủy đơn hàng này không?"
+                        );
+
+                        if (!confirmed) {
+                            event.preventDefault();
+                        }
+
+                    });
+                });
+
+            // Xác nhận trước khi xác nhận đã nhận hàng
+            document.querySelectorAll(".confirm-received-form")
+                .forEach(function (form) {
+
+                    form.addEventListener("submit", function (event) {
+
+                        const confirmed = confirm(
+                            "Bạn có chắc chắn đã nhận được đơn hàng này không?"
+                        );
+
+                        if (!confirmed) {
+                            event.preventDefault();
+                        }
+
+                    });
+                });
+
+        });
+    </script>
+}

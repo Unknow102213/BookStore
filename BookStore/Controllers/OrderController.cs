@@ -1,4 +1,5 @@
-﻿using BookStore.Models;
+﻿
+using BookStore.Models;
 using BookStore.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -96,60 +97,68 @@ namespace BookStore.Controllers
 
             int userID = (int)Session["UserID"];
 
-            if (model.SelectedCartItemIDs == null ||
+            if (model == null ||
+                model.SelectedCartItemIDs == null ||
                 !model.SelectedCartItemIDs.Any())
             {
                 TempData["CartError"] = "Không có sản phẩm để đặt hàng.";
                 return RedirectToAction("CartIndex", "Cart");
             }
 
+            var selectedIDs = model.SelectedCartItemIDs
+                .Distinct()
+                .ToList();
+
+            var cartItems = db.CartItems
+                .Include(ci => ci.Book)
+                .Include(ci => ci.Cart)
+                .Where(ci =>
+                    selectedIDs.Contains(ci.CartItemID) &&
+                    ci.Cart.UserID == userID)
+                .ToList();
+
+            if (cartItems.Count != selectedIDs.Count || !cartItems.Any())
+            {
+                TempData["CartError"] = "Giỏ hàng đã thay đổi. Vui lòng kiểm tra lại.";
+                return RedirectToAction("CartIndex", "Cart");
+            }
+
+            foreach (var item in cartItems)
+            {
+                if (!item.Book.IsActive ||
+                    item.Quantity <= 0 ||
+                    item.Quantity > item.Book.StockQuantity)
+                {
+                    model.CheckoutError =
+                        "Sách không còn đủ số lượng trong kho. Vui lòng kiểm tra lại.";
+
+                    return View("Checkout", model);
+                }
+            }
+
+            model.SelectedCartItemIDs = selectedIDs;
+
+            model.Items = cartItems.Select(item => new CheckoutItemViewModel
+            {
+                CartItemID = item.CartItemID,
+                BookID = item.BookID,
+                Title = item.Book.Title,
+                ImageURL = item.Book.ImageURL,
+                UnitPrice = item.Book.Price,
+                Quantity = item.Quantity
+            }).ToList();
+
+            model.TotalAmount = model.Items.Sum(item => item.Subtotal);
+
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("CartIndex", "Cart");
+                return View("Checkout", model);
             }
 
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    var selectedIDs = model.SelectedCartItemIDs
-                        .Distinct()
-                        .ToList();
-
-                    var cartItems = db.CartItems
-                        .Include(ci => ci.Book)
-                        .Include(ci => ci.Cart)
-                        .Where(ci =>
-                            selectedIDs.Contains(ci.CartItemID) &&
-                            ci.Cart.UserID == userID)
-                        .ToList();
-
-                    if (cartItems.Count != selectedIDs.Count ||
-                        !cartItems.Any())
-                    {
-                        transaction.Rollback();
-
-                        TempData["CartError"] =
-                            "Giỏ hàng đã thay đổi. Vui lòng thử lại.";
-
-                        return RedirectToAction("CartIndex", "Cart");
-                    }
-
-                    foreach (var item in cartItems)
-                    {
-                        if (!item.Book.IsActive ||
-                            item.Quantity <= 0 ||
-                            item.Quantity > item.Book.StockQuantity)
-                        {
-                            transaction.Rollback();
-
-                            TempData["CartError"] =
-                                "Sách không còn đủ số lượng trong kho.";
-
-                            return RedirectToAction("CartIndex", "Cart");
-                        }
-                    }
-
                     decimal totalAmount = cartItems.Sum(
                         item => item.Book.Price * item.Quantity);
 
@@ -193,16 +202,18 @@ namespace BookStore.Controllers
                     db.SaveChanges();
                     transaction.Commit();
 
-                    return RedirectToAction("OrderSuccess", new { id = order.OrderID });
+                    return RedirectToAction(
+                        "OrderSuccess",
+                        new { id = order.OrderID });
                 }
                 catch
                 {
                     transaction.Rollback();
 
-                    TempData["CartError"] =
-                        "Đặt hàng không thành công. Vui lòng thử lại.";
+                    model.CheckoutError =
+                        "Đặt hàng không thành công. Vui lòng kiểm tra lại thông tin và thử lại.";
 
-                    return RedirectToAction("CartIndex", "Cart");
+                    return View("Checkout", model);
                 }
             }
         }
@@ -224,21 +235,39 @@ namespace BookStore.Controllers
             return View(order);
         }
 
-        public ActionResult OrderHistory()
+        // GET: Order/OrderHistory
+        public ActionResult OrderHistory(string status)
         {
             if (Session["UserID"] == null)
                 return RedirectToAction("Login", "Account");
 
             int userID = (int)Session["UserID"];
 
+            var allowedStatuses = new[]
+            {
+                "Chờ xác nhận",
+                "Đang chuẩn bị",
+                "Đang giao hàng",
+                "Đã nhận hàng",
+                "Đã hủy"
+            };
+
+            if (string.IsNullOrEmpty(status) ||
+                !allowedStatuses.Contains(status))
+            {
+                status = "Chờ xác nhận";
+            }
+
             var orders = db.Orders
-                .Where(o => o.UserID == userID)
+                .Where(o =>
+                    o.UserID == userID &&
+                    o.Status == status)
                 .OrderByDescending(o => o.OrderDate)
-                .ToList();            
+                .ToList();
+
             return View(orders);
         }
 
-        // GET: Order/OrderDetails
         // GET: Order/OrderDetails
         public ActionResult OrderDetails(int id)
         {
@@ -254,12 +283,10 @@ namespace BookStore.Controllers
             if (order == null)
                 return HttpNotFound();
 
-            // Tải danh sách chi tiết đơn hàng
             db.Entry(order)
                 .Collection(o => o.OrderDetails)
                 .Load();
 
-            // Tải thông tin sách của từng chi tiết
             foreach (var item in order.OrderDetails)
             {
                 db.Entry(item)
@@ -280,6 +307,8 @@ namespace BookStore.Controllers
 
             int userID = (int)Session["UserID"];
 
+            string previousStatus = "Chờ xác nhận";
+
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
@@ -296,13 +325,13 @@ namespace BookStore.Controllers
                         return HttpNotFound();
                     }
 
-                    // Chỉ cho phép hủy ở 3 trạng thái
+                    previousStatus = order.Status;
+
                     var allowedStatuses = new[]
                     {
-                "Chờ xác nhận",
-                "Đã xác nhận",
-                "Đang đóng gói"
-            };
+                        "Chờ xác nhận",
+                        "Đang chuẩn bị"
+                    };
 
                     if (!allowedStatuses.Contains(order.Status))
                     {
@@ -311,16 +340,16 @@ namespace BookStore.Controllers
                         TempData["OrderMessage"] =
                             "Đơn hàng hiện tại không thể hủy.";
 
-                        return RedirectToAction("OrderDetails", new { id = id });
+                        return RedirectToAction(
+                            "OrderHistory",
+                            new { status = order.Status });
                     }
 
-                    // Hoàn lại số lượng sách vào kho
                     foreach (var item in order.OrderDetails)
                     {
                         item.Book.StockQuantity += item.Quantity;
                     }
 
-                    // Cập nhật trạng thái đơn hàng
                     order.Status = "Đã hủy";
 
                     db.SaveChanges();
@@ -329,7 +358,9 @@ namespace BookStore.Controllers
                     TempData["OrderMessage"] =
                         "Hủy đơn hàng thành công.";
 
-                    return RedirectToAction("OrderDetails", new { id = id });
+                    return RedirectToAction(
+                        "OrderHistory",
+                        new { status = "Đã hủy" });
                 }
                 catch
                 {
@@ -338,7 +369,9 @@ namespace BookStore.Controllers
                     TempData["OrderMessage"] =
                         "Không thể hủy đơn hàng. Vui lòng thử lại.";
 
-                    return RedirectToAction("OrderDetails", new { id = id });
+                    return RedirectToAction(
+                        "OrderHistory",
+                        new { status = previousStatus });
                 }
             }
         }
@@ -367,7 +400,6 @@ namespace BookStore.Controllers
                         return HttpNotFound();
                     }
 
-                    // Chỉ xác nhận khi đơn hàng đang giao
                     if (order.Status != "Đang giao hàng" ||
                         order.CompletedAt != null)
                     {
@@ -376,24 +408,29 @@ namespace BookStore.Controllers
                         TempData["OrderMessage"] =
                             "Đơn hàng không thể xác nhận nhận hàng.";
 
-                        return RedirectToAction("OrderDetails", new { id = id });
+                        return RedirectToAction(
+                            "OrderHistory",
+                            new { status = "Đang giao hàng" });
                     }
 
-                    // Ghi nhận thời điểm nhận hàng
                     DateTime completedAt = DateTime.Now;
 
-                    order.Status = "Đã giao hàng";
+                    order.Status = "Đã nhận hàng";
                     order.PaymentStatus = "Đã thanh toán";
                     order.CompletedAt = completedAt;
-                    order.ReturnDeadline = completedAt.AddDays(7);
+
+                    // Không sử dụng chức năng hoàn trả
+                    order.ReturnDeadline = null;
 
                     db.SaveChanges();
                     transaction.Commit();
 
                     TempData["OrderMessage"] =
-                        "Xác nhận nhận hàng thành công. Bạn có 7 ngày để gửi yêu cầu hoàn trả.";
+                        "Xác nhận nhận hàng thành công.";
 
-                    return RedirectToAction("OrderDetails", new { id = id });
+                    return RedirectToAction(
+                        "OrderHistory",
+                        new { status = "Đã nhận hàng" });
                 }
                 catch
                 {
@@ -402,9 +439,150 @@ namespace BookStore.Controllers
                     TempData["OrderMessage"] =
                         "Không thể xác nhận nhận hàng. Vui lòng thử lại.";
 
-                    return RedirectToAction("OrderDetails", new { id = id });
+                    return RedirectToAction(
+                        "OrderHistory",
+                        new { status = "Đang giao hàng" });
                 }
             }
+        }
+
+        // GET: Order/ReviewOrder
+        public ActionResult ReviewOrder(int id)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Account");
+
+            int userID = (int)Session["UserID"];
+
+            var order = db.Orders
+                .Include(o => o.OrderDetails.Select(od => od.Book))
+                .FirstOrDefault(o =>
+                    o.OrderID == id &&
+                    o.UserID == userID);
+
+            if (order == null)
+                return HttpNotFound();
+
+            if (order.Status != "Đã nhận hàng")
+            {
+                TempData["OrderMessage"] =
+                    "Chỉ có thể đánh giá đơn hàng đã nhận.";
+
+                return RedirectToAction(
+                    "OrderHistory",
+                    new { status = order.Status });
+            }
+
+            var existingReviews = db.Reviews
+                .Where(r =>
+                    r.OrderID == order.OrderID &&
+                    r.UserID == userID)
+                .ToList();
+
+            var firstReview = existingReviews.FirstOrDefault();
+
+            var model = new ReviewOrderViewModel
+            {
+                OrderID = order.OrderID,
+
+                Rating = firstReview != null
+                    ? firstReview.Rating
+                    : 5,
+
+                Comment = firstReview != null
+                    ? firstReview.Comment
+                    : "",
+
+                IsReviewed = existingReviews.Any(),
+
+                Books = order.OrderDetails
+                    .GroupBy(od => od.BookID)
+                    .Select(g => new ReviewBookViewModel
+                    {
+                        BookID = g.Key,
+                        Title = g.FirstOrDefault().Book.Title,
+                        ImageURL = g.FirstOrDefault().Book.ImageURL
+                    })
+                    .ToList()
+            };
+
+            return View(model);
+        }
+
+        // POST: Order/SubmitReview
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitReview(ReviewOrderViewModel model)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Account");
+
+            int userID = (int)Session["UserID"];
+
+            var order = db.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefault(o =>
+                    o.OrderID == model.OrderID &&
+                    o.UserID == userID);
+
+            if (order == null)
+                return HttpNotFound();
+
+            if (order.Status != "Đã nhận hàng")
+                return HttpNotFound();
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(
+                    "ReviewOrder",
+                    new { id = model.OrderID });
+            }
+
+            var bookIDs = order.OrderDetails
+                .Select(od => od.BookID)
+                .Distinct()
+                .ToList();
+
+            var reviews = db.Reviews
+                .Where(r =>
+                    r.OrderID == order.OrderID &&
+                    r.UserID == userID)
+                .ToList();
+
+            // Cập nhật đánh giá đã tồn tại
+            if (reviews.Any())
+            {
+                foreach (var review in reviews)
+                {
+                    review.Rating = model.Rating;
+                    review.Comment = model.Comment.Trim();
+                    review.CreatedAt = DateTime.Now;
+                }
+            }
+            else
+            {
+                // Tạo đánh giá cho từng cuốn sách trong đơn
+                foreach (var bookID in bookIDs)
+                {
+                    db.Reviews.Add(new Review
+                    {
+                        OrderID = order.OrderID,
+                        UserID = userID,
+                        BookID = bookID,
+                        Rating = model.Rating,
+                        Comment = model.Comment.Trim(),
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
+
+            db.SaveChanges();
+
+            TempData["OrderMessage"] = "Đánh giá đơn hàng thành công.";
+
+            return RedirectToAction(
+                "OrderHistory",
+                new { status = "Đã nhận hàng" });
         }
 
         protected override void Dispose(bool disposing)

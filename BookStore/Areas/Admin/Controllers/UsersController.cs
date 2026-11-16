@@ -13,13 +13,29 @@ namespace BookStore.Areas.Admin.Controllers
     public class UsersController : Controller
     {
         private BookStoreEntities db = new BookStoreEntities();
-
+        private bool IsMainAdmin()
+        {
+            return Session["UserID"] != null
+                && Convert.ToInt32(Session["UserID"]) == 1;
+        }
         // GET: Admin/Users
-        public ActionResult Index()
+        public ActionResult Index(string role)
         {
             ViewBag.UserCount = db.Users.Count();
-            var users = db.Users.OrderBy(u => u.UserID).ToList();
-            return View(users);
+            ViewBag.CustomerCount = db.Users.Count(u => u.Role == "C");
+            ViewBag.AdminCount = db.Users.Count(u => u.Role == "A");                    
+            ViewBag.IsMainAdmin = IsMainAdmin();
+
+            var users = db.Users.AsQueryable();
+
+            if (role == "C" || role == "A")
+                users = users.Where(u => u.Role == role);
+
+            ViewBag.CurrentRole = role;
+
+            users = users.OrderBy(u => u.UserID);
+
+            return View(users.ToList());
         }
 
         // GET: Admin/Users/Details/5
@@ -42,16 +58,16 @@ namespace BookStore.Areas.Admin.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
+            // Chỉ tài khoản ID 1 được chỉnh sửa
+            if (!IsMainAdmin() || id == 1)
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
 
             User user = db.Users.Find(id);
 
             if (user == null)
-            {
                 return HttpNotFound();
-            }
 
             return View(user);
         }
@@ -60,18 +76,19 @@ namespace BookStore.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-            [Bind(Include = "UserID,Email,Role,IsActive,FullName,Phone,Address")] User formUser)
+        [Bind(Include = "UserID,Email,Role,IsActive,FullName,Phone,Address")] User formUser)
         {
+            // Kiểm tra quyền chỉnh sửa
+            if (!IsMainAdmin() || formUser.UserID == 1)
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+
             if (ModelState.IsValid)
             {
                 User user = db.Users.Find(formUser.UserID);
 
                 if (user == null)
-                {
                     return HttpNotFound();
-                }
 
-                // Chỉ cập nhật những trường được phép sửa
                 user.Email = formUser.Email;
                 user.Role = formUser.Role;
                 user.IsActive = formUser.IsActive;
@@ -86,7 +103,6 @@ namespace BookStore.Areas.Admin.Controllers
 
             return View(formUser);
         }
-
 
         protected override void Dispose(bool disposing)
         {

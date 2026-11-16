@@ -18,6 +18,7 @@ namespace BookStore.Models
         public Order()
         {
             this.OrderDetails = new HashSet<OrderDetail>();
+            this.Reviews = new HashSet<Review>();
         }
     
         public int OrderID { get; set; }
@@ -37,5 +38,7 @@ namespace BookStore.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

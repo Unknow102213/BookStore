@@ -15,6 +15,13 @@
         <p>Kiểm tra thông tin đơn hàng trước khi đặt mua.</p>
     </div>
 
+    @if (!string.IsNullOrEmpty(Model.CheckoutError))
+    {
+        <div class="checkout-error">
+            @Model.CheckoutError
+        </div>
+    }
+
     @using (Html.BeginForm("PlaceOrder", "Order", FormMethod.Post, new { @class = "checkout-form" }))
     {
         @Html.AntiForgeryToken()
@@ -31,25 +38,47 @@
 
                     <div class="checkout-field">
                         @Html.LabelFor(m => m.ReceiverName, "Họ và tên người nhận")
-                        @Html.TextBoxFor(m => m.ReceiverName, new { placeholder = "Nhập họ tên người nhận" })
+                        @Html.TextBoxFor(m => m.ReceiverName, new
+                        {
+                            placeholder = "Nhập họ tên người nhận",
+                            maxlength = "100",
+                            autocomplete = "name"
+                        })
                         @Html.ValidationMessageFor(m => m.ReceiverName)
                     </div>
 
                     <div class="checkout-field">
                         @Html.LabelFor(m => m.ReceiverPhone, "Số điện thoại")
-                        @Html.TextBoxFor(m => m.ReceiverPhone, new { placeholder = "Nhập số điện thoại", type = "tel" })
+                        @Html.TextBoxFor(m => m.ReceiverPhone, new
+                        {
+                            placeholder = "Nhập số điện thoại",
+                            type = "tel",
+                            maxlength = "10",
+                            inputmode = "numeric",
+                            autocomplete = "tel"
+                        })
                         @Html.ValidationMessageFor(m => m.ReceiverPhone)
                     </div>
 
                     <div class="checkout-field">
                         @Html.LabelFor(m => m.AddressDelivery, "Địa chỉ giao hàng")
-                        @Html.TextAreaFor(m => m.AddressDelivery, new { placeholder = "Nhập địa chỉ nhận hàng", rows = 3 })
+                        @Html.TextAreaFor(m => m.AddressDelivery, new
+                        {
+                            placeholder = "Nhập địa chỉ nhận hàng",
+                            rows = "3",
+                            maxlength = "255"
+                        })
                         @Html.ValidationMessageFor(m => m.AddressDelivery)
                     </div>
 
                     <div class="checkout-field">
                         @Html.LabelFor(m => m.Notes, "Ghi chú (không bắt buộc)")
-                        @Html.TextAreaFor(m => m.Notes, new { placeholder = "Ghi chú cho người giao hàng...", rows = 2 })
+                        @Html.TextAreaFor(m => m.Notes, new
+                        {
+                            placeholder = "Ghi chú cho người giao hàng...",
+                            rows = "2",
+                            maxlength = "500"
+                        })
                         @Html.ValidationMessageFor(m => m.Notes)
                     </div>
                 </div>

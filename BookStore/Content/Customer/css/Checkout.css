@@ -1,4 +1,5 @@
-﻿.checkout-page {
+﻿
+.checkout-page {
     width: 100%;
     max-width: 1200px;
     margin: 35px auto 60px;
@@ -89,12 +90,33 @@
         resize: vertical;
     }
 
+    /* Thông báo lỗi dưới từng ô nhập */
     .checkout-field .field-validation-error {
         display: block;
-        margin-top: 5px;
-        color: #dc2626;
+        margin-top: 6px;
+        color: #dc3545;
         font-size: 13px;
+        line-height: 1.5;
     }
+
+    /* Viền đỏ khi nhập sai */
+    .checkout-field input.input-validation-error,
+    .checkout-field textarea.input-validation-error {
+        border: 1px solid #dc3545;
+        outline: none;
+    }
+
+/* Thông báo lỗi chung ở đầu trang */
+.checkout-error {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    color: #dc3545;
+    background: #fff0f0;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+}
 
 .checkout-payment {
     display: flex;

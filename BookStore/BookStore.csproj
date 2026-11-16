@@ -6073,7 +6073,6 @@
     <Content Include="Content\Layout\css\header.css" />
     <Content Include="Content\Layout\css\menu.css" />
     <Content Include="Content\Layout\img\logo.jpg" />
-    <Content Include="database.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

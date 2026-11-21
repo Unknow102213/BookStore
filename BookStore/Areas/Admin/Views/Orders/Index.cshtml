@@ -9,6 +9,7 @@
 @section Styles {
     <link rel="stylesheet"
           href="@Url.Content("~/Content/Admin/css/OrdersIndex.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/Search.css")" />
 }
 
 <div class="orders-page">
@@ -17,6 +18,30 @@
             <h2>Quản lý đơn hàng</h2>
             <p>Danh sách đơn hàng trong hệ thống.</p>
         </div>
+    </div>
+
+    <div class="admin-search">
+        @using (Html.BeginForm("Index", "Orders",
+            new { area = "Admin" }, FormMethod.Get))
+        {
+            <div class="admin-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input type="text"
+                       name="searchString"
+                       value="@ViewBag.SearchString"
+                       placeholder="Nhập mã đơn, email khách hàng hoặc trạng thái đơn hàng..." />
+            </div>
+
+            <button type="submit" class="btn-admin-search">
+                Tìm kiếm
+            </button>
+
+            <a href="@Url.Action("Index", "Orders", new { area = "Admin" })"
+               class="btn-admin-reset">
+                Làm mới
+            </a>
+        }
     </div>
 
     <div class="table-container">
@@ -80,7 +105,14 @@
                 {
                     <tr>
                         <td colspan="7" class="empty-orders">
-                            Chưa có đơn hàng nào.
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.SearchString as string))
+                            {
+                                <span>Không tìm thấy đơn hàng phù hợp.</span>
+                            }
+                            else
+                            {
+                                <span>Chưa có đơn hàng nào.</span>
+                            }
                         </td>
                     </tr>
                 }

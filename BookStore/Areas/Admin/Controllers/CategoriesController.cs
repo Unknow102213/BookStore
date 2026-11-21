@@ -12,12 +12,29 @@ namespace BookStore.Areas.Admin.Controllers
         private BookStoreEntities db = new BookStoreEntities();
 
         // GET: Admin/Categories
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
+            // Tổng số thể loại trong database
             ViewBag.CategoryCount = db.Categories.Count();
-            var categories = db.Categories.ToList();
-            return View(db.Categories.ToList());
+
+            // Lấy danh sách thể loại
+            var categories = db.Categories.AsQueryable();
+
+            // Tìm kiếm theo tên thể loại
+            if (!String.IsNullOrWhiteSpace(searchString))
+            {
+                searchString = searchString.Trim();
+
+                categories = categories.Where(c =>
+                    c.CategoryName.Contains(searchString));
+            }
+
+            // Giữ lại từ khóa tìm kiếm
+            ViewBag.SearchString = searchString;
+
+            return View(categories.ToList());
         }
+
 
         // GET: Admin/Categories/Create
         public ActionResult Create()

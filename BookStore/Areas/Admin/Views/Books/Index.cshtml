@@ -7,6 +7,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/BooksIndex.css")" />
+    <link href="@Url.Content("~/Content/Admin/css/Search.css")"rel="stylesheet" />
 }
 
 <div class="books-page">
@@ -28,6 +29,33 @@
     </div>
 
     <div class="books-table-wrapper">
+
+
+        <div class="admin-search">
+            @using (Html.BeginForm("Index", "Books",
+                new { area = "Admin" }, FormMethod.Get))
+            {
+                <div class="admin-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input type="text"
+                           name="searchString"
+                           value="@ViewBag.SearchString"
+                           placeholder="Nhập tên sách hoặc tên tác giả..." />
+                </div>
+
+                <button type="submit" class="btn-admin-search">
+                    Tìm kiếm
+                </button>
+
+                <a href="@Url.Action("Index", "Books", new { area = "Admin" })"
+                   class="btn-admin-reset">
+                    Làm mới
+                </a>
+            }
+        </div>
+
+
         <table class="books-table">
             <thead>
                 <tr>
@@ -129,16 +157,27 @@
                         </tr>
                     }
                 }
+
                 else
                 {
                     <tr>
                         <td colspan="7" class="books-empty">
                             <i class="fa-solid fa-book-open"></i>
-                            <p>Chưa có sách nào trong hệ thống.</p>
-                            <span>Hãy nhấn "Thêm sách" để tạo sách đầu tiên.</span>
+
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.SearchString as string))
+                            {
+                                <p>Không tìm thấy sách phù hợp.</p>
+                                <span>Vui lòng thử từ khóa khác.</span>
+                            }
+                            else
+                            {
+                                <p>Chưa có sách nào trong hệ thống.</p>
+                                <span>Hãy nhấn "Thêm sách" để tạo sách đầu tiên.</span>
+                            }
                         </td>
                     </tr>
                 }
+
             </tbody>
         </table>
     </div>

@@ -29,6 +29,12 @@
             <div class="admin-sidebar-title">QUẢN LÝ</div>
 
             <nav class="admin-nav">
+                <a href="@Url.Action("Index", "Homes", new { area = "Admin" })"
+                   class="admin-nav-link @(currentController == "Homes" ? "active" : "")">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Trang chủ Admin</span>
+                </a>
+
                 <a href="@Url.Action("Index", "Books" , new { area="Admin" })"
                    class="admin-nav-link @(currentController == "Books" ? "active" : "" )">
                     <i class="fa-solid fa-book"></i>

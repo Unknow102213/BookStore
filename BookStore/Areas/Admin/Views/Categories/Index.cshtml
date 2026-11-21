@@ -7,6 +7,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/CategoriesIndex.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/Search.css")" />
 }
 
 <div class="categories-page">
@@ -29,11 +30,11 @@
             <h2>Quản lý thể loại</h2>
             <p>Quản lý các thể loại dùng để phân loại sách.</p>
         </div>
-    
+
         <div class="index-summary">
             Tổng số danh mục: <strong>@ViewBag.CategoryCount</strong>
         </div>
-    
+
         <a href="@Url.Action("Create", "Categories", new { area = "Admin" })"
            class="btn-add-category">
             <i class="fa-solid fa-plus"></i>
@@ -42,6 +43,31 @@
     </div>
 
     <div class="categories-table-wrapper">
+
+        <div class="admin-search">
+            @using (Html.BeginForm("Index", "Categories",
+                new { area = "Admin" }, FormMethod.Get))
+            {
+                <div class="admin-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input type="text"
+                           name="searchString"
+                           value="@ViewBag.SearchString"
+                           placeholder="Nhập tên thể loại cần tìm..." />
+                </div>
+
+                <button type="submit" class="btn-admin-search">
+                    Tìm kiếm
+                </button>
+
+                <a href="@Url.Action("Index", "Categories", new { area = "Admin" })"
+                   class="btn-admin-reset">
+                    Làm mới
+                </a>
+            }
+        </div>
+
         <table class="categories-table">
             <thead>
                 <tr>
@@ -83,8 +109,17 @@
                     <tr>
                         <td colspan="3" class="categories-empty">
                             <i class="fa-solid fa-layer-group"></i>
-                            <p>Chưa có thể loại nào.</p>
-                            <span>Nhấn "Thêm thể loại" để tạo thể loại đầu tiên.</span>
+
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.SearchString as string))
+                            {
+                                <p>Không tìm thấy thể loại phù hợp.</p>
+                                <span>Vui lòng thử từ khóa khác.</span>
+                            }
+                            else
+                            {
+                                <p>Chưa có thể loại nào.</p>
+                                <span>Nhấn "Thêm thể loại" để tạo thể loại đầu tiên.</span>
+                            }
                         </td>
                     </tr>
                 }

@@ -9,11 +9,11 @@
 }
 
 @section Styles {
-    <link rel="stylesheet"
-          href="@Url.Content("~/Content/Admin/css/UsersIndex.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/UsersIndex.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/Search.css")" />
 }
 
-<div class="users-page">    
+<div class="users-page">
     <!-- Tiêu đề -->
     <div class="page-heading">
         <div>
@@ -80,6 +80,32 @@
             <span>@ViewBag.AdminCount</span>
         </a>
 
+    </div>
+
+    <!-- Thanh tìm kiếm -->
+    <div class="admin-search">
+        @using (Html.BeginForm("Index", "Users",
+            new { area = "Admin", role = currentRole }, FormMethod.Get))
+        {
+            <div class="admin-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input type="text"
+                       name="searchString"
+                       value="@ViewBag.SearchString"
+                       placeholder="Nhập mã tài khoản, họ tên hoặc email..." />
+            </div>
+
+            <button type="submit" class="btn-admin-search">
+                Tìm kiếm
+            </button>
+
+            <a href="@Url.Action("Index", "Users",
+                 new { area = "Admin", role = currentRole })"
+               class="btn-admin-reset">
+                Làm mới
+            </a>
+        }
     </div>
 
     <!-- Danh sách tài khoản -->
@@ -187,7 +213,14 @@
                 {
                     <tr>
                         <td colspan="7" class="empty-message">
-                            Không có tài khoản nào trong danh sách.
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.SearchString as string))
+                            {
+                                <span>Không tìm thấy tài khoản phù hợp.</span>
+                            }
+                            else
+                            {
+                                <span>Không có tài khoản nào trong danh sách.</span>
+                            }
                         </td>
                     </tr>
                 }

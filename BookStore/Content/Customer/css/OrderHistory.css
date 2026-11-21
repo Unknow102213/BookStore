@@ -220,6 +220,31 @@
     transition: all 0.2s ease;
 }
 
+/*đặt lại*/
+/* Đặt lại */
+.btn-order-again {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 10px 16px;
+    border: 1px solid #454e83;
+    border-radius: 7px;
+    background: #fff;
+    color: #454e83;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .btn-order-again:hover {
+        background: #454e83;
+        color: #fff;
+    }
+
 /* Xem chi tiết */
 
 .order-detail-btn {

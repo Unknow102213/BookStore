@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="18dac46baa7e44d38504465f504f9558" Name="Diagram1" ZoomLevel="98">
+      <Diagram DiagramId="18dac46baa7e44d38504465f504f9558" Name="Diagram1" ZoomLevel="46">
         <EntityTypeShape EntityType="BookStoreModel.Book" Width="1.5" PointX="2.75" PointY="4.875" IsExpanded="true" />
         <EntityTypeShape EntityType="BookStoreModel.Cart" Width="1.5" PointX="7.375" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="BookStoreModel.CartItem" Width="1.5" PointX="0.5" PointY="1.5" IsExpanded="true" />

@@ -82,7 +82,11 @@
                              alt="@item.Book.Title" />
 
                         <div class="cart-item-info">
-                            <h3>@item.Book.Title</h3>
+                            <h3 class="cart-item-title">
+                                <a href="@Url.Action("BookDetails", "Book",new { id = item.Book.BookID })">
+                                    @item.Book.Title
+                                </a>
+                            </h3>
 
                             <p class="cart-item-author">
                                 @(item.Book.AuthorName ?? "")

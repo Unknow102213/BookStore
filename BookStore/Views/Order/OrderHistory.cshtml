@@ -152,6 +152,25 @@
                                 }
                             }
 
+                            <!-- Đặt lại đơn hàng -->
+                            @if (order.Status == "Đã nhận hàng" || order.Status == "Đã hủy")
+                            {
+                                using (Html.BeginForm(
+                                    "Reorder",
+                                    "Order",
+                                    new { id = order.OrderID },
+                                    FormMethod.Post,
+                                    new { @class = "history-action-form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="btn-order-again">
+                                        <i class="fa-solid fa-rotate-right"></i>
+                                        Đặt lại
+                                    </button>
+                                }
+                            }
+
                             <!-- Đánh giá sách -->
                             @if (order.Status == "Đã nhận hàng")
                             {

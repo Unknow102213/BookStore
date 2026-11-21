@@ -179,14 +179,25 @@
     min-width: 0;
 }
 
+    /* Tên sách và liên kết đến chi tiết sách */
     .cart-item-info h3 {
         margin: 0;
-        color: #1f2937;
         font-size: 16px;
         font-weight: 700;
         line-height: 1.5;
         overflow-wrap: anywhere;
     }
+
+        .cart-item-info h3 a {
+            color: #1f2937;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+            .cart-item-info h3 a:hover {
+                color: #454e83;
+                text-decoration: underline;
+            }    
 
     .cart-item-info > p {
         margin: 0;

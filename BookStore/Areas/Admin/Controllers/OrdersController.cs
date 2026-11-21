@@ -15,11 +15,33 @@ namespace BookStore.Areas.Admin.Controllers
         private BookStoreEntities db = new BookStoreEntities();
 
         // GET: Admin/Orders
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
+            // Tổng số đơn hàng trong hệ thống
             ViewBag.OrderCount = db.Orders.Count();
+
+            // Lấy danh sách đơn hàng
             var orders = db.Orders.Include(o => o.User);
-            return View(orders.ToList());
+
+            // Tìm theo mã đơn hàng, email hoặc trạng thái
+            if (!String.IsNullOrWhiteSpace(searchString))
+            {
+                searchString = searchString.Trim();
+
+                int orderId;
+                bool isOrderId = int.TryParse(searchString, out orderId);
+
+                orders = orders.Where(o =>
+                    (isOrderId && o.OrderID == orderId) ||
+                    (o.User != null && o.User.Email.Contains(searchString)) ||
+                    (o.Status != null && o.Status.Contains(searchString))
+                );
+            }
+
+            // Giữ lại từ khóa tìm kiếm
+            ViewBag.SearchString = searchString;
+
+            return View(orders.OrderByDescending(o => o.OrderDate).ToList());
         }
 
         // GET: Admin/Orders/Details/5

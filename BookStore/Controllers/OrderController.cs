@@ -446,6 +446,153 @@ namespace BookStore.Controllers
             }
         }
 
+        // POST: Order/Reorder
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reorder(int id)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Account");
+
+            int userID = (int)Session["UserID"];
+
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Lấy đơn hàng cũ của khách
+                    var order = db.Orders
+                        .Include(o => o.OrderDetails.Select(od => od.Book))
+                        .FirstOrDefault(o =>
+                            o.OrderID == id &&
+                            o.UserID == userID);
+
+                    if (order == null)
+                        return HttpNotFound();
+
+                    // Chỉ cho phép đặt lại đơn đã nhận hoặc đã hủy
+                    if (order.Status != "Đã nhận hàng" &&
+                        order.Status != "Đã hủy")
+                    {
+                        transaction.Rollback();
+
+                        TempData["OrderMessage"] =
+                            "Đơn hàng này không thể đặt lại.";
+
+                        return RedirectToAction("OrderHistory");
+                    }
+
+                    // Lấy giỏ hàng của khách
+                    var cart = db.Carts.FirstOrDefault(c =>
+                        c.UserID == userID);
+
+                    if (cart == null)
+                    {
+                        cart = new Cart
+                        {
+                            UserID = userID,
+                            CreatedAt = DateTime.Now
+                        };
+
+                        db.Carts.Add(cart);
+                        db.SaveChanges();
+                    }
+
+                    int addedCount = 0;
+                    int skippedCount = 0;
+
+                    // Gộp các sách trùng nhau trong đơn hàng
+                    var orderItems = order.OrderDetails
+                        .GroupBy(od => od.BookID)
+                        .Select(g => new
+                        {
+                            BookID = g.Key,
+                            Quantity = g.Sum(od => od.Quantity)
+                        })
+                        .ToList();
+
+                    foreach (var item in orderItems)
+                    {
+                        var book = db.Books.FirstOrDefault(b =>
+                            b.BookID == item.BookID);
+
+                        // Bỏ qua sách đã ngừng kinh doanh
+                        if (book == null || !book.IsActive)
+                        {
+                            skippedCount++;
+                            continue;
+                        }
+
+                        // Tìm sách đã có trong giỏ hàng
+                        var cartItem = db.CartItems.FirstOrDefault(ci =>
+                            ci.CartID == cart.CartID &&
+                            ci.BookID == item.BookID);
+
+                        int currentQuantity = cartItem != null
+                            ? cartItem.Quantity
+                            : 0;
+
+                        // Kiểm tra tồn kho
+                        if (currentQuantity + item.Quantity > book.StockQuantity)
+                        {
+                            skippedCount++;
+                            continue;
+                        }
+
+                        // Cập nhật số lượng hoặc thêm sách mới
+                        if (cartItem != null)
+                        {
+                            cartItem.Quantity += item.Quantity;
+                        }
+                        else
+                        {
+                            db.CartItems.Add(new CartItem
+                            {
+                                CartID = cart.CartID,
+                                BookID = item.BookID,
+                                Quantity = item.Quantity
+                            });
+                        }
+
+                        addedCount++;
+                    }
+
+                    if (addedCount == 0)
+                    {
+                        transaction.Rollback();
+
+                        TempData["OrderMessage"] =
+                            "Không có sách nào đủ điều kiện để đặt lại. " +
+                            "Vui lòng kiểm tra tình trạng kinh doanh và tồn kho.";
+
+                        return RedirectToAction(
+                            "OrderHistory",
+                            new { status = order.Status });
+                    }
+
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    TempData["CartMessage"] =
+                        "Đã thêm " + addedCount + " đầu sách vào giỏ hàng." +
+                        (skippedCount > 0
+                            ? " Có " + skippedCount + " đầu sách không được thêm do hết hàng hoặc ngừng kinh doanh."
+                            : "");
+
+                    return RedirectToAction("CartIndex", "Cart");
+                }
+                catch
+                {
+                    transaction.Rollback();
+
+                    TempData["OrderMessage"] =
+                        "Không thể đặt lại đơn hàng. Vui lòng thử lại.";
+
+                    return RedirectToAction("OrderHistory");
+                }
+            }
+        }
+
         // GET: Order/ReviewOrder
         public ActionResult ReviewOrder(int id)
         {

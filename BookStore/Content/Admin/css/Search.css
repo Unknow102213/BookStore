@@ -1,0 +1,82 @@
+﻿
+/* Thanh tìm kiếm */
+.admin-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+    /* Form tìm kiếm */
+    .admin-search form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+
+/* Ô nhập */
+.admin-search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    max-width: 440px;
+    height: 52px;
+    padding: 0 18px;
+    background: #fff;
+    border: 1px solid #DCE1F4;
+    border-radius: 8px;
+}
+
+    .admin-search-box i {
+        color: #454e83;
+        font-size: 20px;
+    }
+
+    .admin-search-box input {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #333;
+        background: transparent;
+    }
+
+/* Nút tìm kiếm */
+.btn-admin-search,
+.btn-admin-reset {
+    height: 46px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-admin-search {
+    background: #454e83;
+    color: #fff;
+}
+
+    .btn-admin-search:hover {
+        background: #353d6b;
+    }
+
+/* Nút làm mới */
+.btn-admin-reset {
+    background: #E9EBF5;
+    color: #454e83;
+}
+
+    .btn-admin-reset:hover {
+        background: #DCE1F4;
+    }

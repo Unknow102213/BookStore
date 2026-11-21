@@ -7,6 +7,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/ReviewsIndex.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Admin/css/Search.css")" />
 }
 
 <div class="reviews-page">
@@ -14,7 +15,31 @@
         <div>
             <h2>Quản lý đánh giá</h2>
             <p>Xem và quản lý đánh giá sách từ khách hàng.</p>
-        </div>        
+        </div>
+    </div>
+
+    <div class="admin-search">
+        @using (Html.BeginForm("Index", "Reviews",
+            new { area = "Admin" }, FormMethod.Get))
+        {
+            <div class="admin-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input type="text"
+                       name="searchString"
+                       value="@ViewBag.SearchString"
+                       placeholder="Nhập mã đánh giá, tên sách hoặc số sao..." />
+            </div>
+
+            <button type="submit" class="btn-admin-search">
+                Tìm kiếm
+            </button>
+
+            <a href="@Url.Action("Index", "Reviews", new { area = "Admin" })"
+               class="btn-admin-reset">
+                Làm mới
+            </a>
+        }
     </div>
 
     <div class="reviews-panel">
@@ -25,7 +50,7 @@
                         <th>Mã đánh giá</th>
                         <th>Tên sách</th>
                         <th>Email khách hàng</th>
-                        <th>Đánh giá</th>                        
+                        <th>Đánh giá</th>
                         <th>Thời gian</th>
                         <th>Thao tác</th>
                     </tr>
@@ -48,7 +73,7 @@
                                         <i class="fa-solid fa-star"></i>
                                         @item.Rating/5
                                     </span>
-                                </td>                                
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedAt)
                                 </td>
@@ -76,7 +101,14 @@
                     {
                         <tr>
                             <td colspan="6" class="reviews-empty">
-                                Chưa có đánh giá nào.
+                                @if (!String.IsNullOrWhiteSpace(ViewBag.SearchString as string))
+                                {
+                                    <span>Không tìm thấy đánh giá phù hợp.</span>
+                                }
+                                else
+                                {
+                                    <span>Chưa có đánh giá nào.</span>
+                                }
                             </td>
                         </tr>
                     }

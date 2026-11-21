@@ -16,7 +16,7 @@ namespace BookStore.Controllers
             if (Session["UserID"] != null)
             {
                 if (Session["UserRole"]?.ToString() == "A")
-                    return RedirectToAction("Index", "Books", new { area = "Admin" });
+                    return RedirectToAction("Index", "Homes", new { area = "Admin" });
 
                 return RedirectToAction("Index", "Home");
             }
@@ -56,7 +56,7 @@ namespace BookStore.Controllers
             Session["UserRole"] = user.Role;
 
             if (user.Role == "A")
-                return RedirectToAction("Index", "Books", new { area = "Admin" });
+                return RedirectToAction("Index", "Homes", new { area = "Admin" });
 
             return RedirectToAction("Index", "Home");
         }

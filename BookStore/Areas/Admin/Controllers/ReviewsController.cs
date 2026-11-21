@@ -13,16 +13,37 @@ namespace BookStore.Areas.Admin.Controllers
         private BookStoreEntities db = new BookStoreEntities();
 
         // GET: Admin/Reviews
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
-            var reviews = db.Reviews
-                .Include(r => r.Book)
-                .Include(r => r.User)
-                .OrderByDescending(r => r.CreatedAt)
-                .ToList();
+            // Tổng số đánh giá trong hệ thống
             ViewBag.ReviewCount = db.Reviews.Count();
 
-            return View(reviews);
+            // Lấy danh sách đánh giá
+            var reviews = db.Reviews
+                .Include(r => r.Book)
+                .Include(r => r.User);
+
+            // Tìm theo mã đánh giá, tên sách hoặc số sao
+            if (!String.IsNullOrWhiteSpace(searchString))
+            {
+                searchString = searchString.Trim();
+
+                int searchNumber;
+                bool isNumber = int.TryParse(searchString, out searchNumber);
+
+                reviews = reviews.Where(r =>
+                    (isNumber && r.ReviewID == searchNumber) ||
+                    (r.Book != null && r.Book.Title.Contains(searchString)) ||
+                    (isNumber && r.Rating == searchNumber)
+                );
+            }
+
+            // Giữ lại từ khóa tìm kiếm
+            ViewBag.SearchString = searchString;
+
+            return View(reviews
+                .OrderByDescending(r => r.CreatedAt)
+                .ToList());
         }
 
         // GET: Admin/Reviews/Details/5

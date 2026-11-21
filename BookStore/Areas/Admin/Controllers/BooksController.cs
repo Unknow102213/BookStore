@@ -12,15 +12,34 @@ namespace BookStore.Areas.Admin.Controllers
 {
     public class BooksController : Controller
     {
-        private BookStoreEntities db = new BookStoreEntities();
+        private BookStoreEntities db = new BookStoreEntities();        
 
         // GET: Admin/Books
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
+            // Tổng số sách trong hệ thống
             ViewBag.BookCount = db.Books.Count();
+
+            // Lấy danh sách sách
             var books = db.Books.Include(b => b.Category);
+
+            // Tìm theo tên sách hoặc tên tác giả
+            if (!String.IsNullOrWhiteSpace(searchString))
+            {
+                searchString = searchString.Trim();
+
+                books = books.Where(b =>
+                    b.Title.Contains(searchString) ||
+                    (b.AuthorName != null && b.AuthorName.Contains(searchString))
+                );
+            }
+
+            // Giữ lại từ khóa tìm kiếm trên giao diện
+            ViewBag.SearchString = searchString;
+
             return View(books.ToList());
         }
+
 
         // GET: Admin/Books/Details/5
         public ActionResult Details(int? id)

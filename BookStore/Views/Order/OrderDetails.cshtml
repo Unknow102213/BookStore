@@ -114,7 +114,11 @@
                     </div>
 
                     <div class="order-product-info">
-                        <h4>@item.Book.Title</h4>
+                        <h4>
+                            <a href="@Url.Action("BookDetails", "Book", new { id = item.Book.BookID })">
+                                @item.Book.Title
+                            </a>
+                        </h4>
                         <p>Số lượng: @item.Quantity</p>
                         <p>Đơn giá: @item.UnitPrice.ToString("N0") đ</p>
                     </div>

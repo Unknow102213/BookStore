@@ -19,19 +19,42 @@ namespace BookStore.Areas.Admin.Controllers
                 && Convert.ToInt32(Session["UserID"]) == 1;
         }
         // GET: Admin/Users
-        public ActionResult Index(string role)
+        // GET: Admin/Users
+        public ActionResult Index(string role, string searchString)
         {
+            // Thống kê tài khoản
             ViewBag.UserCount = db.Users.Count();
             ViewBag.CustomerCount = db.Users.Count(u => u.Role == "C");
-            ViewBag.AdminCount = db.Users.Count(u => u.Role == "A");                    
+            ViewBag.AdminCount = db.Users.Count(u => u.Role == "A");
             ViewBag.IsMainAdmin = IsMainAdmin();
 
+            // Lấy danh sách tài khoản
             var users = db.Users.AsQueryable();
 
+            // Lọc theo vai trò
             if (role == "C" || role == "A")
+            {
                 users = users.Where(u => u.Role == role);
+            }
 
+            // Tìm theo mã tài khoản, họ tên hoặc email
+            if (!String.IsNullOrWhiteSpace(searchString))
+            {
+                searchString = searchString.Trim();
+
+                int userId;
+                bool isNumber = int.TryParse(searchString, out userId);
+
+                users = users.Where(u =>
+                    (isNumber && u.UserID == userId) ||
+                    (u.FullName != null && u.FullName.Contains(searchString)) ||
+                    (u.Email != null && u.Email.Contains(searchString))
+                );
+            }
+
+            // Giữ lại thông tin tìm kiếm và tab đang chọn
             ViewBag.CurrentRole = role;
+            ViewBag.SearchString = searchString;
 
             users = users.OrderBy(u => u.UserID);
 

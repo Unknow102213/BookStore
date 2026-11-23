@@ -25,7 +25,7 @@
     </div>
 
     <div class="book-form-card">
-        @using (Html.BeginForm("Create", "Books", new { area = "Admin" }, FormMethod.Post))
+        @using (Html.BeginForm("Create", "Books", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
@@ -93,14 +93,17 @@
                 </div>
 
                 <div class="form-field">
-                    @Html.LabelFor(model => model.ImageURL, "Đường dẫn ảnh bìa")
-                    @Html.TextBoxFor(model => model.ImageURL, new
-                    {
-                        @class = "form-control",
-                        placeholder = "Ví dụ: ~/Content/img/books/book1.jpg"
-                    })
-                    @Html.ValidationMessageFor(model => model.ImageURL, "", new { @class = "field-error" })
-                    <small>Nhập đường dẫn ảnh trong dự án hoặc đường dẫn ảnh phù hợp.</small>
+                    <label for="imageFile">Ảnh bìa sách</label>
+
+                    <input type="file"
+                           id="imageFile"
+                           name="imageFile"
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.webp" />
+
+                    @Html.ValidationMessage("imageFile", "", new { @class = "field-error" })
+
+                    <small>Chọn ảnh JPG, JPEG, PNG hoặc WEBP. Dung lượng tối đa 5 MB.</small>
                 </div>
 
                 <div class="form-field form-field-full">
@@ -113,7 +116,7 @@
                     })
                     @Html.ValidationMessageFor(model => model.Description, "", new { @class = "field-error" })
                 </div>
-            </div>            
+            </div>
 
             <div class="book-form-actions">
                 <a href="@Url.Action("Index", "Books", new { area = "Admin" })"

@@ -25,7 +25,7 @@
     </div>
 
     <div class="book-form-card">
-        @using (Html.BeginForm("Edit", "Books", new { area = "Admin" }, FormMethod.Post))
+        @using (Html.BeginForm("Edit", "Books", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.BookID)
@@ -100,14 +100,26 @@
                 </div>
 
                 <div class="form-field">
-                    @Html.LabelFor(model => model.ImageURL, "Đường dẫn ảnh bìa")
-                    @Html.TextBoxFor(model => model.ImageURL, new
+                    <label for="imageFile">Ảnh bìa sách</label>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageURL))
                     {
-                        @class = "form-control",
-                        placeholder = "Ví dụ: ~/Content/img/books/book1.jpg"
-                    })
-                    @Html.ValidationMessageFor(model => model.ImageURL, "", new { @class = "field-error" })
-                    <small>Kiểm tra đường dẫn nếu muốn thay ảnh bìa.</small>
+                        <div class="current-book-image">
+                            <img src="@Url.Content(Model.ImageURL)"
+                                 alt="Ảnh bìa sách hiện tại" />
+                            <small>Ảnh bìa hiện tại</small>
+                        </div>
+                    }
+
+                    <input type="file"
+                           id="imageFile"
+                           name="imageFile"
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.webp" />
+
+                    @Html.ValidationMessage("imageFile", "", new { @class = "field-error" })
+
+                    <small>Nếu không chọn ảnh mới, hệ thống sẽ giữ nguyên ảnh hiện tại.</small>
                 </div>
 
                 <div class="form-field form-field-full">

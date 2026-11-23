@@ -32,8 +32,7 @@
 
 
         <div class="admin-search">
-            @using (Html.BeginForm("Index", "Books",
-                new { area = "Admin" }, FormMethod.Get))
+            @using (Html.BeginForm("Index", "Books", new { area = "Admin" }, FormMethod.Get))
             {
                 <div class="admin-search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>

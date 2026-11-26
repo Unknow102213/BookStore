@@ -24,10 +24,10 @@ END
 GO
 */
 
-CREATE DATABASE [BookStore_Test];
+CREATE DATABASE [BookStore];
 GO
 
-USE [BookStore_Test];
+USE [BookStore];
 GO
 
 /* =====================================================================

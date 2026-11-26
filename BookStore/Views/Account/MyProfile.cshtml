@@ -10,32 +10,130 @@
     <h2>Thông tin cá nhân</h2>
     <p>Quản lý thông tin tài khoản của bạn.</p>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="account-message success">
+            @TempData["Success"]
+        </div>
+    }
+
     <div class="profile-form">
+
+        <!-- THÔNG TIN CÁ NHÂN -->
         <div class="account-field">
             <label>Họ và tên</label>
-            <input type="text" value="@Model.FullName" readonly />
+            <div class="profile-value">
+                @(string.IsNullOrWhiteSpace(Model.FullName)
+                    ? "Chưa cập nhật" : Model.FullName)
+            </div>
         </div>
 
         <div class="account-field">
             <label>Email</label>
-            <input type="email" value="@Model.Email" readonly />
+            <div class="profile-value">
+                @Model.Email
+            </div>
         </div>
 
         <div class="account-field">
             <label>Số điện thoại</label>
-            <input type="text"
-                   value="@(string.IsNullOrWhiteSpace(Model.Phone) ? "Chưa cập nhật" : Model.Phone)"
-                   readonly />
+            <div class="profile-value">
+                @(string.IsNullOrWhiteSpace(Model.Phone)
+                    ? "Chưa cập nhật" : Model.Phone)
+            </div>
         </div>
 
         <div class="account-field">
             <label>Địa chỉ</label>
-            <textarea rows="3" readonly>@(string.IsNullOrWhiteSpace(Model.Address) ? "Chưa cập nhật" : Model.Address)</textarea>
+            <div class="profile-value">
+                @(string.IsNullOrWhiteSpace(Model.Address)
+                    ? "Chưa cập nhật" : Model.Address)
+            </div>
         </div>
 
-        <button type="button" class="account-submit"
-                onclick="location.href='@Url.Action("EditProfile", "Account")'">
-            Chỉnh sửa thông tin
-        </button>
+        <!-- CHỈNH SỬA THÔNG TIN -->
+        <details class="profile-action"
+                 open="@(ViewBag.OpenEdit == true ? "open" : null)">
+
+            <summary class="account-submit">
+                Chỉnh sửa thông tin
+            </summary>
+
+            @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                <div class="profile-edit-form">
+
+                    <div class="account-field">
+                        <label>Họ và tên</label>
+                        <input type="text" name="fullName"
+                               value="@Model.FullName"
+                               placeholder="Nhập họ và tên" />
+                    </div>
+
+                    <div class="account-field">
+                        <label>Số điện thoại</label>
+                        <input type="text" name="phone"
+                               value="@Model.Phone"
+                               placeholder="Nhập số điện thoại" />
+                    </div>
+
+                    <div class="account-field full-width">
+                        <label>Địa chỉ</label>
+                        <textarea name="address" rows="3"
+                                  placeholder="Nhập địa chỉ">@Model.Address</textarea>
+                    </div>
+
+                    <button type="submit" class="account-submit">
+                        Lưu thay đổi
+                    </button>
+                </div>
+            }
+        </details>
+
+        <!-- ĐỔI MẬT KHẨU -->
+        <details class="profile-action"
+                 open="@(ViewBag.OpenPassword == true ? "open" : null)">
+
+            <summary class="account-submit">
+                Đổi mật khẩu
+            </summary>
+
+            @using (Html.BeginForm("ChangePassword", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                <div class="profile-edit-form">
+
+                    <div class="account-field full-width">
+                        <label>Mật khẩu hiện tại</label>
+                        <input type="password" name="currentPassword"
+                               placeholder="Nhập mật khẩu hiện tại" />
+                    </div>
+
+                    <div class="account-field">
+                        <label>Mật khẩu mới</label>
+                        <input type="password" name="newPassword"
+                               placeholder="Nhập mật khẩu mới" />
+                    </div>
+
+                    <div class="account-field">
+                        <label>Xác nhận mật khẩu mới</label>
+                        <input type="password" name="confirmPassword"
+                               placeholder="Nhập lại mật khẩu mới" />
+                    </div>
+
+                    <button type="submit" class="account-submit">
+                        Xác nhận đổi mật khẩu
+                    </button>
+                </div>
+            }
+        </details>
+
     </div>
 </div>

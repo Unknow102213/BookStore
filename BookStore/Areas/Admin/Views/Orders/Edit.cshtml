@@ -99,26 +99,8 @@
                     @Html.ValidationMessageFor(
                         model => model.Status, "",
                         new { @class = "order-edit-error" })
-                </div>
-
-                <div class="order-edit-field order-edit-full">
-                    @Html.LabelFor(model => model.Notes, "Ghi chú")
-
-                    @Html.TextAreaFor(
-                        model => model.Notes,
-                        new
-                        {
-                            @class = "order-edit-input order-edit-textarea",
-                            rows = 4,
-                            maxlength = 500
-                        })
-
-                    @Html.ValidationMessageFor(
-                        model => model.Notes, "",
-                        new { @class = "order-edit-error" })
-                </div>
+                </div>                
             </div>
-
             <div class="order-edit-actions">
                 @Html.ActionLink(
                     "Hủy",

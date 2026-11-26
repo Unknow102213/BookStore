@@ -164,6 +164,139 @@ namespace BookStore.Controllers
             return View(user);
         }
 
+        // POST: Account/EditProfile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProfile(
+            string fullName,
+            string phone,
+            string address)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login");
+
+            int userID = (int)Session["UserID"];
+            User user = db.Users.Find(userID);
+
+            if (user == null)
+            {
+                Session.Clear();
+                return RedirectToAction("Login");
+            }
+
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Vui lòng nhập họ và tên."
+                );
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.OpenEdit = true;
+                return View("MyProfile", user);
+            }
+
+            user.FullName = fullName.Trim();
+            user.Phone = string.IsNullOrWhiteSpace(phone)
+                ? null : phone.Trim();
+
+            user.Address = string.IsNullOrWhiteSpace(address)
+                ? null : address.Trim();
+
+            db.SaveChanges();
+
+            Session["FullName"] = user.FullName;
+
+            TempData["Success"] = "Cập nhật thông tin thành công!";
+
+            return RedirectToAction("MyProfile");
+        }
+
+        // POST: Account/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(
+            string currentPassword,
+            string newPassword,
+            string confirmPassword)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login");
+
+            int userID = (int)Session["UserID"];
+            User user = db.Users.Find(userID);
+
+            if (user == null)
+            {
+                Session.Clear();
+                return RedirectToAction("Login");
+            }
+
+            if (string.IsNullOrWhiteSpace(currentPassword) ||
+                string.IsNullOrWhiteSpace(newPassword) ||
+                string.IsNullOrWhiteSpace(confirmPassword))
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Vui lòng nhập đầy đủ thông tin mật khẩu."
+                );
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(user.PasswordHash) ||
+                    !BCrypt.Net.BCrypt.Verify(
+                        currentPassword, user.PasswordHash))
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "Mật khẩu hiện tại không chính xác."
+                    );
+                }
+
+                if (newPassword.Length < 8)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "Mật khẩu mới phải có ít nhất 8 ký tự."
+                    );
+                }
+
+                if (newPassword != confirmPassword)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "Mật khẩu xác nhận không khớp."
+                    );
+                }
+
+                if (currentPassword == newPassword)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "Mật khẩu mới phải khác mật khẩu hiện tại."
+                    );
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.OpenPassword = true;
+                return View("MyProfile", user);
+            }
+
+            user.PasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            db.SaveChanges();
+
+            TempData["Success"] = "Đổi mật khẩu thành công!";
+
+            return RedirectToAction("MyProfile");
+        }
+
+
         // GET: Account/Logout
         public ActionResult Logout()
         {

@@ -22,7 +22,8 @@ namespace BookStore.ViewModels
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
         [StringLength(72, MinimumLength = 8, ErrorMessage = "Mật khẩu phải từ 8 đến 72 ký tự.")]
-        [RegularExpression(@"^\S+$", ErrorMessage = "Mật khẩu không được chứa dấu cách.")]
+        [RegularExpression(@"^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9\s]).+$", 
+            ErrorMessage = "Mật khẩu phải có chữ hoa, chữ thường, chữ số và ký tự đặc biệt, không chứa dấu cách.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu.")]

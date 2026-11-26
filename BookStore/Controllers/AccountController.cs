@@ -145,7 +145,6 @@ namespace BookStore.Controllers
         }
 
         // GET: Account/MyProfile
-        // GET: Account/MyProfile
         public ActionResult MyProfile()
         {
             if (Session["UserID"] == null)
@@ -165,17 +164,18 @@ namespace BookStore.Controllers
         }
 
         // POST: Account/EditProfile
+
+
+        // POST: Account/EditProfile
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProfile(
-            string fullName,
-            string phone,
-            string address)
+        public ActionResult EditProfile(EditProfileViewModel model)
         {
             if (Session["UserID"] == null)
                 return RedirectToAction("Login");
 
             int userID = (int)Session["UserID"];
+
             User user = db.Users.Find(userID);
 
             if (user == null)
@@ -184,29 +184,27 @@ namespace BookStore.Controllers
                 return RedirectToAction("Login");
             }
 
-            if (string.IsNullOrWhiteSpace(fullName))
-            {
-                ModelState.AddModelError(
-                    "",
-                    "Vui lòng nhập họ và tên."
-                );
-            }
-
+            // Kiểm tra dữ liệu theo EditProfileViewModel
             if (!ModelState.IsValid)
             {
                 ViewBag.OpenEdit = true;
                 return View("MyProfile", user);
             }
 
-            user.FullName = fullName.Trim();
-            user.Phone = string.IsNullOrWhiteSpace(phone)
-                ? null : phone.Trim();
+            // Cập nhật thông tin
+            user.FullName = model.FullName.Trim();
 
-            user.Address = string.IsNullOrWhiteSpace(address)
-                ? null : address.Trim();
+            user.Phone = string.IsNullOrWhiteSpace(model.Phone)
+                ? null
+                : model.Phone.Trim();
+
+            user.Address = string.IsNullOrWhiteSpace(model.Address)
+                ? null
+                : model.Address.Trim();
 
             db.SaveChanges();
 
+            // Cập nhật tên trong Session
             Session["FullName"] = user.FullName;
 
             TempData["Success"] = "Cập nhật thông tin thành công!";
@@ -217,15 +215,13 @@ namespace BookStore.Controllers
         // POST: Account/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangePassword(
-            string currentPassword,
-            string newPassword,
-            string confirmPassword)
+        public ActionResult ChangePassword(ChangePasswordViewModel model)
         {
             if (Session["UserID"] == null)
                 return RedirectToAction("Login");
 
             int userID = (int)Session["UserID"];
+
             User user = db.Users.Find(userID);
 
             if (user == null)
@@ -234,60 +230,42 @@ namespace BookStore.Controllers
                 return RedirectToAction("Login");
             }
 
-            if (string.IsNullOrWhiteSpace(currentPassword) ||
-                string.IsNullOrWhiteSpace(newPassword) ||
-                string.IsNullOrWhiteSpace(confirmPassword))
+            // Kiểm tra dữ liệu theo ChangePasswordViewModel
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError(
-                    "",
-                    "Vui lòng nhập đầy đủ thông tin mật khẩu."
-                );
-            }
-            else
-            {
+                // Kiểm tra mật khẩu hiện tại
                 if (string.IsNullOrEmpty(user.PasswordHash) ||
                     !BCrypt.Net.BCrypt.Verify(
-                        currentPassword, user.PasswordHash))
+                        model.CurrentPassword,
+                        user.PasswordHash))
                 {
                     ModelState.AddModelError(
-                        "",
+                        "CurrentPassword",
                         "Mật khẩu hiện tại không chính xác."
                     );
                 }
-
-                if (newPassword.Length < 8)
+                // Kiểm tra mật khẩu mới có trùng mật khẩu cũ không
+                else if (BCrypt.Net.BCrypt.Verify(
+                    model.NewPassword,
+                    user.PasswordHash))
                 {
                     ModelState.AddModelError(
-                        "",
-                        "Mật khẩu mới phải có ít nhất 8 ký tự."
-                    );
-                }
-
-                if (newPassword != confirmPassword)
-                {
-                    ModelState.AddModelError(
-                        "",
-                        "Mật khẩu xác nhận không khớp."
-                    );
-                }
-
-                if (currentPassword == newPassword)
-                {
-                    ModelState.AddModelError(
-                        "",
+                        "NewPassword",
                         "Mật khẩu mới phải khác mật khẩu hiện tại."
                     );
                 }
             }
 
+            // Nếu có lỗi, giữ lại phần đổi mật khẩu
             if (!ModelState.IsValid)
             {
                 ViewBag.OpenPassword = true;
                 return View("MyProfile", user);
             }
 
+            // Mã hóa và cập nhật mật khẩu mới
             user.PasswordHash =
-                BCrypt.Net.BCrypt.HashPassword(newPassword);
+                BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
 
             db.SaveChanges();
 
@@ -295,6 +273,7 @@ namespace BookStore.Controllers
 
             return RedirectToAction("MyProfile");
         }
+
 
 
         // GET: Account/Logout

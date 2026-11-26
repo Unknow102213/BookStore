@@ -53,7 +53,7 @@
 
         <!-- CHỈNH SỬA THÔNG TIN -->
         <details class="profile-action"
-                 open="@(ViewBag.OpenEdit == true ? "open" : null)">
+                 @(ViewBag.OpenEdit == true ? "open" : "")>
 
             <summary class="account-submit">
                 Chỉnh sửa thông tin
@@ -63,40 +63,66 @@
             {
                 @Html.AntiForgeryToken()
 
-                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-
                 <div class="profile-edit-form">
 
-                    <div class="account-field">
+                    <div class="account-field full-width">
                         <label>Họ và tên</label>
-                        <input type="text" name="fullName"
-                               value="@Model.FullName"
-                               placeholder="Nhập họ và tên" />
+
+                        @Html.TextBox(
+                                 "FullName",
+                                 Model.FullName,
+                                 new
+                                 {
+                                     placeholder = "Nhập họ và tên"
+                                 })
+
+                        @Html.ValidationMessage(
+                                 "FullName", "", new { @class = "field-validation-error" })
                     </div>
 
                     <div class="account-field">
                         <label>Số điện thoại</label>
-                        <input type="text" name="phone"
-                               value="@Model.Phone"
-                               placeholder="Nhập số điện thoại" />
+
+                        @Html.TextBox(
+                                 "Phone",
+                                 Model.Phone,
+                                 new
+                                 {
+                                     placeholder = "Nhập số điện thoại"
+                                 })
+
+                        @Html.ValidationMessage(
+                                 "Phone", "", new { @class = "field-validation-error" })
                     </div>
 
                     <div class="account-field full-width">
                         <label>Địa chỉ</label>
-                        <textarea name="address" rows="3"
-                                  placeholder="Nhập địa chỉ">@Model.Address</textarea>
+
+                        @Html.TextArea(
+                                 "Address",
+                                 Model.Address,
+                                 3,
+                                 0,
+                                 new
+                                 {
+                                     placeholder = "Nhập địa chỉ"
+                                 })
+
+                        @Html.ValidationMessage(
+                                 "Address", "", new { @class = "field-validation-error" })
                     </div>
 
                     <button type="submit" class="account-submit">
                         Lưu thay đổi
                     </button>
+
                 </div>
             }
         </details>
 
         <!-- ĐỔI MẬT KHẨU -->
         <details class="profile-action"
-                 open="@(ViewBag.OpenPassword == true ? "open" : null)">
+                 @(ViewBag.OpenPassword == true ? "open" : "")>
 
             <summary class="account-submit">
                 Đổi mật khẩu
@@ -106,31 +132,57 @@
             {
                 @Html.AntiForgeryToken()
 
-                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-
                 <div class="profile-edit-form">
 
                     <div class="account-field full-width">
                         <label>Mật khẩu hiện tại</label>
-                        <input type="password" name="currentPassword"
-                               placeholder="Nhập mật khẩu hiện tại" />
+
+                        @Html.Password(
+                                 "CurrentPassword",
+                                 null,
+                                 new
+                                 {
+                                     placeholder = "Nhập mật khẩu hiện tại"
+                                 })
+
+                        @Html.ValidationMessage(
+                                 "CurrentPassword", "", new { @class = "field-validation-error" })
                     </div>
 
                     <div class="account-field">
                         <label>Mật khẩu mới</label>
-                        <input type="password" name="newPassword"
-                               placeholder="Nhập mật khẩu mới" />
+
+                        @Html.Password(
+                                 "NewPassword",
+                                 null,
+                                 new
+                                 {
+                                     placeholder = "Nhập mật khẩu mới"
+                                 })
+
+                        @Html.ValidationMessage(
+                                 "NewPassword", "", new { @class = "field-validation-error" })
                     </div>
 
                     <div class="account-field">
                         <label>Xác nhận mật khẩu mới</label>
-                        <input type="password" name="confirmPassword"
-                               placeholder="Nhập lại mật khẩu mới" />
+
+                        @Html.Password(
+                                 "ConfirmPassword",
+                                 null,
+                                 new
+                                 {
+                                     placeholder = "Nhập lại mật khẩu mới"
+                                 })
+
+                        @Html.ValidationMessage(
+                                 "ConfirmPassword", "", new { @class = "field-validation-error" })
                     </div>
 
                     <button type="submit" class="account-submit">
                         Xác nhận đổi mật khẩu
                     </button>
+
                 </div>
             }
         </details>

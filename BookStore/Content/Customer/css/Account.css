@@ -5,7 +5,10 @@
    Thông tin cá nhân - Đổi mật khẩu
    ================================================== */
 
-/* ===== LOGIN / REGISTER / FORGOT PASSWORD ===== */
+
+/* ==================================================
+   1. LOGIN / REGISTER / FORGOT PASSWORD
+   ================================================== */
 
 .account-page {
     display: flex;
@@ -32,6 +35,7 @@
     box-sizing: border-box;
 }
 
+
 /* ===== BANNER ===== */
 
 .account-banner {
@@ -48,6 +52,7 @@
         margin: 0 auto;
         object-fit: contain;
     }
+
 
 /* ===== FORM AREA ===== */
 
@@ -81,6 +86,7 @@
     flex-direction: column;
     gap: 18px;
 }
+
 
 /* ===== FORM FIELDS ===== */
 
@@ -135,6 +141,7 @@
             cursor: default;
         }
 
+
 /* ===== BUTTON ===== */
 
 .account-submit {
@@ -169,6 +176,7 @@
         outline-offset: 2px;
     }
 
+
 /* ===== LINKS ===== */
 
 .account-links {
@@ -189,6 +197,7 @@
             color: #172238;
             text-decoration: underline;
         }
+
 
 /* ===== SUCCESS / ERROR NOTIFICATIONS ===== */
 
@@ -252,6 +261,7 @@
     }
 }
 
+
 /* ===== REGISTER FORM ===== */
 
 .account-register .account-form-area {
@@ -273,11 +283,8 @@
 
 
 /* ==================================================
-   CUSTOMER ACCOUNT LAYOUT
-   Thông tin cá nhân - Lịch sử đơn hàng
+   2. CUSTOMER ACCOUNT LAYOUT
    ================================================== */
-
-/* ===== ACCOUNT PAGE ===== */
 
 .account-page:has(.account-sidebar) {
     display: block;
@@ -301,6 +308,7 @@
         box-shadow: 0 8px 30px rgba(18, 29, 49, 0.08);
         box-sizing: border-box;
     }
+
 
 /* ===== SIDEBAR ===== */
 
@@ -366,14 +374,16 @@
         margin: 0;
     }
 
+
 /* ===== MAIN CONTENT ===== */
 
 .account-content {
     min-width: 0;
 }
 
+
     /* ==================================================
-   PROFILE PAGE
+   3. PROFILE PAGE
    ================================================== */
 
     .account-content .profile-page {
@@ -398,6 +408,7 @@
             line-height: 1.6;
         }
 
+
     /* ===== PROFILE INFORMATION ===== */
 
     .account-content .profile-form {
@@ -408,7 +419,7 @@
         align-items: start;
     }
 
-        .account-content .profile-form .account-field label {
+        .account-content .profile-form > .account-field label {
             color: #27344c;
             font-size: 15px;
             font-weight: 600;
@@ -431,14 +442,15 @@
             overflow-wrap: anywhere;
         }
 
-        .account-content .profile-form .account-field:last-of-type .profile-value {
+        .account-content .profile-form > .account-field:last-of-type .profile-value {
             min-height: 90px;
             align-items: flex-start;
             white-space: pre-wrap;
         }
 
+
     /* ==================================================
-   PROFILE ACTIONS
+   4. PROFILE ACTIONS
    Chỉnh sửa thông tin - Đổi mật khẩu
    ================================================== */
 
@@ -446,24 +458,45 @@
         grid-column: 1 / -1;
         width: 100%;
         min-width: 0;
+        padding: 0;
+        border: 1px solid #e1e5ef;
+        border-radius: 10px;
+        background: #ffffff;
+        overflow: hidden;
     }
 
         .account-content .profile-action summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 48px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #454e83;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
             list-style: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background 0.2s ease;
         }
 
-            .account-content .profile-action summary::-webkit-details-marker {
-                display: none;
+            .account-content .profile-action summary:hover {
+                background: #303960;
             }
 
             .account-content .profile-action summary::after {
                 content: "+";
                 margin-left: 10px;
+                font-size: 20px;
+                font-weight: 400;
             }
 
         .account-content .profile-action[open] summary::after {
             content: "−";
         }
+
 
     /* ===== EDIT PROFILE / CHANGE PASSWORD FORMS ===== */
 
@@ -472,12 +505,22 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 20px;
         min-width: 0;
-        padding: 22px 0 8px;
+        padding: 22px 18px 18px;
     }
 
         .account-content .profile-edit-form .full-width {
             grid-column: 1 / -1;
         }
+
+        .account-content .profile-edit-form .account-field {
+            min-width: 0;
+        }
+
+            .account-content .profile-edit-form .account-field label {
+                color: #27344c;
+                font-size: 14px;
+                font-weight: 600;
+            }
 
         .account-content .profile-edit-form input,
         .account-content .profile-edit-form textarea {
@@ -490,8 +533,9 @@
             background: #f8fafc;
             color: #1f2937;
             font-family: Arial, sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
 
             .account-content .profile-edit-form input:focus,
@@ -507,18 +551,61 @@
             resize: vertical;
         }
 
-        .account-content .profile-edit-form .account-submit {
-            grid-column: 1 / -1;
-            background: #454e83;
+
+    /* ===== VALIDATION MESSAGES ===== */
+
+    .account-content .field-validation-error {
+        display: block;
+        margin-top: 3px;
+        color: #d93025;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .account-content .input-validation-error {
+        border-color: #d93025 !important;
+        background: #fff8f8 !important;
+    }
+
+        .account-content .input-validation-error:focus {
+            border-color: #d93025 !important;
+            box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.12) !important;
         }
 
-            .account-content .profile-edit-form .account-submit:hover {
-                background: #303960;
-            }
+
+    /* ===== VALIDATION SUMMARY ===== */
+
+    .account-content .profile-edit-form .validation-summary-errors {
+        grid-column: 1 / -1;
+        padding: 10px 14px;
+        border: 1px solid #f3c4c4;
+        border-radius: 8px;
+        background: #fff1f1;
+        color: #b42318;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .account-content .profile-edit-form .validation-summary-valid {
+        display: none;
+    }
+
+
+    /* ===== SUBMIT BUTTONS IN PROFILE ===== */
+
+    .account-content .profile-edit-form button.account-submit {
+        grid-column: 1 / -1;
+        margin-top: 4px;
+        background: #454e83;
+    }
+
+        .account-content .profile-edit-form button.account-submit:hover {
+            background: #303960;
+        }
 
 
 /* ==================================================
-   RESPONSIVE
+   5. RESPONSIVE
    ================================================== */
 
 @media (max-width: 760px) {
@@ -559,6 +646,7 @@
         margin-bottom: 22px;
     }
 
+
     /* Customer account layout */
 
     .account-page:has(.account-sidebar) {
@@ -576,6 +664,7 @@
         padding: 16px;
     }
 
+
     /* Profile page */
 
     .account-content .profile-page {
@@ -591,16 +680,19 @@
         font-size: 24px;
     }
 
+
     /* Profile forms */
 
     .account-content .profile-edit-form {
         grid-template-columns: minmax(0, 1fr);
+        padding: 18px 12px 14px;
     }
 
         .account-content .profile-edit-form .full-width {
             grid-column: auto;
         }
 }
+
 
 @media (max-width: 420px) {
 
@@ -613,5 +705,10 @@
         max-width: calc(100% - 24px);
         padding: 12px 16px;
         font-size: 13px;
+    }
+
+    .account-content .profile-action summary {
+        padding: 12px;
+        font-size: 14px;
     }
 }
